@@ -1,6 +1,9 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingController;
+
+// ============ HEALTH CHECK (untuk Railway) ============
+Route::get('/up', fn() => response('OK', 200));
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin;
