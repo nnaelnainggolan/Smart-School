@@ -1,0 +1,697 @@
+:root {
+    --school-forest: #173f35;
+    --school-sage: #e8efe5;
+    --school-ivory: #f7f8f2;
+    --school-ink: #263f36;
+    --school-muted: #65766d;
+    --school-line: #e1e8de;
+}
+body.school-app {
+    font-family:
+        "Segoe UI",
+        system-ui,
+        -apple-system,
+        sans-serif;
+    background: var(--school-ivory);
+    color: var(--school-ink);
+    -webkit-font-smoothing: antialiased;
+}
+.school-app * {
+    box-sizing: border-box;
+}
+.school-app a,
+.school-app button {
+    -webkit-tap-highlight-color: transparent;
+}
+.school-app :is(a, button, input, select, textarea):focus-visible {
+    outline: 3px solid #b28a42;
+    outline-offset: 3px;
+}
+.school-shell {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    overflow: hidden;
+}
+.school-sidebar {
+    width: 248px;
+    background: var(--school-forest);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 50;
+    transition:
+        width 0.2s,
+        transform 0.2s;
+    scrollbar-width: thin;
+    scrollbar-color: #688774 transparent;
+}
+.school-sidebar.is-collapsed {
+    width: 76px;
+}
+.school-sidebar .sidebar-link {
+    min-height: 42px;
+    margin: 2px 4px;
+    padding: 11px 13px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #d0dfcf;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+        background 0.2s,
+        color 0.2s;
+}
+.school-sidebar .sidebar-link:hover {
+    background: #ffffff0e;
+    color: white;
+}
+.school-sidebar .sidebar-link.active {
+    background: #e5edda;
+    color: #173f35;
+    font-weight: 700;
+    box-shadow: 0 4px 16px #102d2114;
+}
+.school-sidebar .sidebar-link i {
+    width: 18px;
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 14px;
+}
+.school-sidebar .sidebar-section {
+    padding: 20px 17px 6px;
+    color: #9bb89e;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+.school-sidebar.is-collapsed .sidebar-link {
+    justify-content: center;
+    padding: 12px 8px;
+}
+.school-sidebar .text-blue-300 {
+    color: #b6cbb4;
+}
+.school-brand {
+    padding: 22px 20px;
+    border-bottom: 1px solid #ffffff14;
+    min-height: 87px;
+}
+.school-sidebar.is-collapsed .school-brand {
+    padding-inline: 20px;
+}
+.school-logo {
+    background: #d5b77a !important;
+    color: #173f35 !important;
+    box-shadow: none !important;
+}
+.school-logo i {
+    color: inherit !important;
+}
+.school-sidebar-footer {
+    margin-top: auto;
+    padding: 12px;
+    border-top: 1px solid #ffffff14;
+}
+.school-main-shell {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+}
+.school-topbar {
+    min-height: 87px;
+    padding: 16px 28px;
+    background: #fafbf7;
+    border-bottom: 1px solid var(--school-line);
+    box-shadow: none;
+    gap: 12px;
+}
+.school-topbar h1 {
+    font-size: 18px;
+    letter-spacing: -0.025em;
+    color: var(--school-forest);
+}
+.school-topbar p {
+    color: var(--school-muted);
+}
+.school-icon-button {
+    width: 38px;
+    height: 38px;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid var(--school-line);
+    background: white;
+    border-radius: 11px;
+    color: var(--school-forest);
+}
+.school-icon-button:hover {
+    background: var(--school-sage);
+}
+.school-date {
+    font-size: 11px;
+    color: var(--school-muted);
+    padding-right: 12px;
+    white-space: nowrap;
+}
+.school-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px 32px;
+    scrollbar-width: thin;
+    scrollbar-color: #b6c6b3 transparent;
+}
+.school-content-inner {
+    max-width: 1440px;
+    margin-inline: auto;
+}
+.school-content .text-gray-400 {
+    color: #708075;
+}
+.school-content .text-gray-800 {
+    color: var(--school-ink);
+}
+.school-content .text-gray-500 {
+    color: var(--school-muted);
+}
+.school-flashes:empty {
+    display: none;
+}
+.school-flashes {
+    padding: 16px 28px 0;
+}
+.school-notifications {
+    width: min(340px, calc(100vw - 32px));
+    max-height: 75dvh;
+}
+.school-skip {
+    position: fixed;
+    top: -90px;
+    left: 16px;
+    padding: 10px 18px;
+    background: white;
+    color: #173f35;
+    z-index: 100;
+    border-radius: 8px;
+}
+.school-skip:focus {
+    top: 12px;
+}
+.school-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: #102a2370;
+    backdrop-filter: blur(2px);
+}
+.dashboard-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+}
+.dashboard-page.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0;
+}
+.dashboard-page h2 {
+    letter-spacing: -0.035em;
+}
+.dashboard-page h3 {
+    font-size: 15px;
+    letter-spacing: -0.015em;
+}
+.dashboard-welcome {
+    background: linear-gradient(110deg, #e8eee0, #f1f3e8) !important;
+    color: #173f35 !important;
+    border: 1px solid #dce5d4;
+    box-shadow: none;
+    padding: 22px 26px !important;
+    border-radius: 18px !important;
+}
+.dashboard-welcome h2 {
+    font-size: 26px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+.dashboard-welcome .text-blue-200 {
+    color: #5b7360 !important;
+}
+.dashboard-welcome > .absolute {
+    display: none;
+}
+.dashboard-welcome .bg-white\/20 {
+    background: #dae5cc;
+    color: #486347;
+}
+.dashboard-welcome .text-white {
+    color: #486347;
+}
+.dashboard-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 750;
+    color: #58745d;
+    margin-bottom: 8px;
+}
+.dashboard-welcome p {
+    line-height: 1.6;
+}
+.dashboard-greeting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+.dashboard-greeting-copy {
+    min-width: 0;
+}
+.dashboard-welcome-icon {
+    width: 62px;
+    height: 62px;
+    border-radius: 18px;
+    background: #dce6cf;
+    display: grid;
+    place-items: center;
+    color: #50704d;
+    flex-shrink: 0;
+    font-size: 24px;
+}
+.stat-card {
+    background: white;
+    border: 1px solid var(--school-line);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 3px 14px #193d2903;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+.stat-card:hover {
+    transform: none;
+    box-shadow: 0 6px 20px #193d2908;
+    border-color: #b8cbb0;
+}
+.dashboard-page .stat-card .text-3xl {
+    font-size: 30px;
+    letter-spacing: -0.04em;
+}
+.dashboard-page .stat-card .text-2xl {
+    font-size: 27px;
+    letter-spacing: -0.04em;
+}
+.dashboard-page .stat-card.text-center {
+    text-align: left;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 12px;
+}
+.dashboard-page .stat-card.text-center > div:first-child {
+    grid-column: 2;
+    grid-row: 1/3;
+    margin: 0;
+}
+.dashboard-page .stat-card.text-center > p {
+    grid-column: 1;
+}
+.dashboard-page .stat-card.text-center > p:last-child {
+    grid-row: 2;
+}
+.dashboard-page a.stat-card.text-center {
+    display: flex;
+    text-align: center;
+}
+.dashboard-panel {
+    background: white;
+    border: 1px solid var(--school-line);
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 3px 14px #193d2903;
+    min-width: 0;
+}
+.dashboard-page .dashboard-panel h3 {
+    color: var(--school-forest);
+}
+.dashboard-page .bg-blue-100,
+.dashboard-page .bg-purple-100 {
+    background: #e7eee2;
+}
+.dashboard-page .bg-blue-50,
+.dashboard-page .bg-purple-50 {
+    background: #f0f4ec;
+}
+.dashboard-page
+    :is(
+        .text-blue-500,
+        .text-blue-600,
+        .text-blue-700,
+        .text-purple-500,
+        .text-purple-600
+    ) {
+    color: #50724c;
+}
+.dashboard-page :is(.bg-orange-100, .bg-yellow-100) {
+    background: #f7edda;
+}
+.dashboard-page :is(.text-orange-500, .text-orange-600, .text-yellow-500) {
+    color: #9a722d;
+}
+.dashboard-page .text-gray-300 {
+    color: #9baa9e;
+}
+.dashboard-page .border-gray-100 {
+    border-color: var(--school-line);
+}
+.dashboard-page a.border-dashed {
+    border: 1px solid var(--school-line);
+    background: #fafbf7;
+    border-radius: 12px;
+}
+.dashboard-page a.border-dashed:hover {
+    border-color: #9fb494;
+    background: #eef3e8;
+}
+.dashboard-page a.border-dashed > div {
+    width: 36px;
+    height: 36px;
+}
+.dashboard-page a.border-dashed {
+    flex-direction: row;
+    text-align: left;
+    gap: 12px;
+    padding: 14px;
+}
+.dashboard-page .grid {
+    min-width: 0;
+}
+.dashboard-page .grid > * {
+    min-width: 0;
+}
+.dashboard-panel .flex.justify-between {
+    gap: 12px;
+}
+.dashboard-chart-layout {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    min-height: 180px;
+}
+.dashboard-chart-donut {
+    position: relative;
+    flex: 0 0 164px;
+    width: 164px;
+    height: 164px;
+}
+.dashboard-chart-bar {
+    position: relative;
+    height: 230px;
+    width: 100%;
+}
+.dashboard-news-row {
+    border: 1px solid #edf0e9;
+    border-radius: 12px;
+    padding: 11px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+}
+.dashboard-news-row:hover {
+    background: #f6f8f1;
+}
+.dashboard-news-row + .dashboard-news-row {
+    margin-top: 8px;
+}
+.dashboard-news-row .news-symbol {
+    height: 34px;
+    width: 34px;
+    flex-shrink: 0;
+    background: #eef2e7;
+    color: #617a52;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+}
+.dashboard-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.dashboard-panel-header p {
+    font-size: 11px;
+    color: var(--school-muted);
+    margin-top: 4px;
+}
+.dashboard-panel-header a {
+    font-size: 12px;
+    font-weight: 600;
+    color: #366b58;
+    white-space: nowrap;
+}
+.dashboard-panel-header a:hover {
+    text-decoration: underline;
+}
+.dashboard-empty {
+    padding: 32px 12px;
+    text-align: center;
+    color: var(--school-muted);
+    font-size: 13px;
+}
+.dashboard-empty i {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 12px;
+    color: #a9ba9f;
+}
+.dashboard-stat-label {
+    font-size: 11px;
+    color: var(--school-muted);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.dashboard-stat-number {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: #173f35;
+}
+.dashboard-stat-foot {
+    font-size: 11px;
+    color: #65766d;
+    margin-top: 12px;
+}
+.dashboard-stat-foot a {
+    color: #366b58;
+    font-weight: 600;
+}
+.dashboard-stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: #e9efe3;
+    color: #527348;
+    flex-shrink: 0;
+}
+.dashboard-stat-icon.gold {
+    background: #f7edda;
+    color: #9a722d;
+}
+.admin-overview {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    gap: 20px;
+}
+.dashboard-quick-links {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+}
+.dashboard-quick-links a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fafbf7;
+    border: 1px solid var(--school-line);
+    border-radius: 12px;
+    padding: 14px;
+    color: #36533e;
+    font-size: 12px;
+    font-weight: 650;
+}
+.dashboard-quick-links a:hover {
+    background: #edf3e5;
+    border-color: #a9bd9e;
+}
+.dashboard-quick-links i {
+    font-size: 16px;
+    color: #69835c;
+}
+@media (max-width: 1279px) {
+    .school-topbar {
+        padding: 16px 20px;
+    }
+    .school-content {
+        padding: 20px;
+    }
+    .school-date {
+        display: none;
+    }
+    .dashboard-quick-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .dashboard-chart-layout {
+        gap: 18px;
+    }
+    .dashboard-chart-donut {
+        flex-basis: 140px;
+        width: 140px;
+        height: 140px;
+    }
+}
+@media (max-width: 1023px) {
+    .school-sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 264px;
+        max-width: calc(100vw - 48px);
+        box-shadow: 14px 0 40px #142f2320;
+    }
+    .school-sidebar.is-collapsed {
+        width: 264px;
+        transform: translateX(-100%);
+        visibility: hidden;
+        pointer-events: none;
+    }
+    .school-sidebar.is-collapsed .school-brand {
+        padding-inline: 20px;
+    }
+    .school-sidebar.is-collapsed .sidebar-link {
+        justify-content: flex-start;
+    }
+    .school-topbar {
+        min-height: 74px;
+    }
+    .admin-overview {
+        grid-template-columns: 1fr;
+    }
+    .school-notifications {
+        position: fixed !important;
+        top: 74px;
+        right: 16px !important;
+        margin-top: 8px !important;
+    }
+}
+@media (max-width: 639px) {
+    .school-topbar {
+        padding: 12px 14px;
+        gap: 6px;
+    }
+    .school-topbar h1 {
+        font-size: 15px;
+    }
+    .school-topbar h1 + p {
+        font-size: 10px;
+    }
+    .school-content {
+        padding: 16px 14px 28px;
+    }
+    .school-flashes {
+        padding: 12px 14px 0;
+    }
+    .dashboard-page {
+        gap: 16px;
+    }
+    .dashboard-welcome {
+        padding: 18px !important;
+    }
+    .dashboard-welcome h2 {
+        font-size: 22px;
+    }
+    .dashboard-welcome-icon {
+        display: none;
+    }
+    .dashboard-welcome .w-16,
+    .dashboard-welcome .w-14 {
+        display: none;
+    }
+    .dashboard-welcome .relative.flex > div:first-child {
+        min-width: 0;
+    }
+    .dashboard-welcome p.text-sm {
+        font-size: 12px;
+    }
+    .stat-card {
+        padding: 14px;
+    }
+    .dashboard-page .stat-card.text-center {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 3px;
+    }
+    .dashboard-page .stat-card.text-center > div:first-child {
+        margin-bottom: 7px;
+    }
+    .dashboard-page .stat-card .text-3xl {
+        font-size: 26px;
+    }
+    .dashboard-panel {
+        padding: 16px;
+    }
+    .dashboard-chart-layout {
+        gap: 16px;
+    }
+    .dashboard-chart-donut {
+        flex-basis: 120px;
+        width: 120px;
+        height: 120px;
+    }
+    .dashboard-chart-bar {
+        height: 220px;
+    }
+    .dashboard-quick-links {
+        gap: 8px;
+    }
+    .dashboard-quick-links a {
+        padding: 12px;
+        font-size: 11px;
+        gap: 8px;
+    }
+    .dashboard-panel-header {
+        align-items: flex-start;
+    }
+    .dashboard-panel-header h3 {
+        font-size: 14px;
+    }
+    .dashboard-page a.border-dashed {
+        padding: 12px;
+        gap: 8px;
+    }
+    .dashboard-panel .flex.items-center.gap-4 {
+        gap: 10px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .school-app *,
+    .school-app *:before,
+    .school-app *:after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}

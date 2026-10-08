@@ -19,8 +19,8 @@
 @endsection
 
 @section('content')
-<div class="space-y-6">
-    <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white relative overflow-hidden">
+<div class="dashboard-page space-y-6">
+    <div class="dashboard-welcome bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-10 translate-x-10"></div>
         <div class="relative">
             <p class="text-blue-200 text-sm">Layanan Bimbingan & Konseling</p>
@@ -60,7 +60,7 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+    <div class="dashboard-panel">
         <div class="flex justify-between items-center mb-5">
             <h3 class="font-bold text-gray-800">Permintaan Konseling Terbaru</h3>
             <a href="{{ route('guru_bk.konseling.index') }}" class="text-xs text-secondary font-semibold hover:underline">Lihat Semua →</a>
