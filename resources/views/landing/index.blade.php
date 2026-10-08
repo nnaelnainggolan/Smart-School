@@ -233,8 +233,8 @@ html{scroll-padding-top:var(--nav-height)}
     <div class="hero-grid">
       <div>
         <span class="eyebrow">Sekolah unggulan terpadu · Medan</span>
-        <h1>Tempat bertumbuh,<br>menjadi generasi<br><em>luar biasa.</em></h1>
-        <p class="hero-description">Pendidikan yang menginspirasi, lingkungan yang mendukung. Bersama SMA Smart School, bangun masa depan yang cerdas, berkarakter, dan penuh kemungkinan.</p>
+        <h1>Tempat bertumbuh,<br>menjadi generasi Baru<br><em>SMK HASANUDDIN</em></h1>
+        <p class="hero-description">Pendidikan yang menginspirasi, lingkungan yang mendukung. Bersama SMK Smart School, bangun masa depan yang cerdas, berkarakter, dan penuh kemungkinan.</p>
         <div class="hero-actions">
           <a href="#ppdb" class="button-primary">Informasi PPDB <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
           <a href="#tentang" class="button-outline">Kenali sekolah kami <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
@@ -265,7 +265,7 @@ html{scroll-padding-top:var(--nav-height)}
                         <div class="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center mx-auto mb-4">
                             <i class="fa-solid fa-school text-5xl text-white"></i>
                         </div>
-                        <p class="font-bold text-xl">SMA Smart School</p>
+                        <p class="font-bold text-xl">SMK Smart School</p>
                         <p class="text-blue-200 text-sm mt-1">Jl. Pendidikan No. 1, Medan</p>
                         <div class="mt-4 grid grid-cols-2 gap-3">
                             <div class="bg-white/10 rounded-xl p-3">
@@ -299,7 +299,7 @@ html{scroll-padding-top:var(--nav-height)}
                     Membentuk Generasi <span class="gradient-text">Cerdas & Berkarakter</span>
                 </h2>
                 <p class="text-gray-600 leading-relaxed mb-5">
-                    SMA Smart School adalah sekolah menengah atas unggulan yang berdiri sejak tahun 2009 di kota Medan. Kami berkomitmen untuk memberikan pendidikan berkualitas tinggi dengan menggabungkan kurikulum nasional dan pengembangan karakter.
+                    SMK Smart School adalah sekolah menengah atas unggulan yang berdiri sejak tahun 2009 di kota Medan. Kami berkomitmen untuk memberikan pendidikan berkualitas tinggi dengan menggabungkan kurikulum nasional dan pengembangan karakter.
                 </p>
                 <p class="text-gray-600 leading-relaxed mb-8">
                     Dengan dukungan teknologi digital melalui <strong>Sistem Informasi Smart School</strong>, orang tua dapat memantau perkembangan akademik anak secara real-time, mulai dari nilai, absensi, hingga layanan konseling online.
@@ -655,7 +655,7 @@ html{scroll-padding-top:var(--nav-height)}
                         <i class="fa-solid fa-graduation-cap text-white text-xl"></i>
                     </div>
                     <div>
-                        <p class="text-xl font-black">SMA Smart School</p>
+                        <p class="text-xl font-black">SMK Smart School</p>
                         <p class="text-blue-300 text-xs">Sekolah Unggulan Terpadu</p>
                     </div>
                 </div>
@@ -713,7 +713,7 @@ html{scroll-padding-top:var(--nav-height)}
             </div>
         </div>
         <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p class="text-blue-300 text-sm">© {{ date('Y') }} SMA Smart School. Hak cipta dilindungi.</p>
+            <p class="text-blue-300 text-sm">© {{ date('Y') }} SMK Smart School. Hak cipta dilindungi.</p>
             <p class="text-blue-300 text-sm">Belajar hari ini. Bersinar esok hari.</p>
         </div>
     </div>
