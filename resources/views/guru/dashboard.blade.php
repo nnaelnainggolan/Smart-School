@@ -26,10 +26,10 @@
 @endsection
 
 @section('content')
-<div class="space-y-6">
+<div class="dashboard-page space-y-6">
 
     <!-- Welcome Banner -->
-    <div class="bg-gradient-to-r from-primary via-primary to-secondary rounded-2xl p-6 text-white relative overflow-hidden">
+    <div class="dashboard-welcome bg-gradient-to-r from-primary via-primary to-secondary rounded-2xl p-6 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-10 translate-x-10"></div>
         <div class="absolute bottom-0 right-10 w-24 h-24 bg-white/5 rounded-full translate-y-8"></div>
         <div class="relative">
@@ -73,7 +73,7 @@
     <!-- Jadwal & Aksi Cepat -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <!-- Jadwal Hari Ini -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="dashboard-panel">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-gray-800">Jadwal Mengajar Hari Ini</h3>
                 <span class="text-xs bg-primary/10 text-primary px-2.5 py-1 rounded-full font-semibold">{{ $jadwalHariIni->count() }} kelas</span>
@@ -102,7 +102,7 @@
         </div>
 
         <!-- Aksi Cepat -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="dashboard-panel">
             <h3 class="font-bold text-gray-800 mb-4">Aksi Cepat</h3>
             <div class="grid grid-cols-2 gap-3">
                 <a href="{{ route('guru.absensi.pilih') }}" class="flex flex-col items-center gap-2 p-4 rounded-2xl border-2 border-dashed border-gray-200 hover:border-secondary hover:bg-blue-50 transition group text-center">

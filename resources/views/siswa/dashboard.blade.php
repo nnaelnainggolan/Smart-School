@@ -29,9 +29,9 @@
 @endsection
 
 @section('content')
-<div class="space-y-6">
+<div class="dashboard-page space-y-6">
     <!-- Hero Banner -->
-    <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white relative overflow-hidden">
+    <div class="dashboard-welcome bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
         <div class="absolute bottom-0 right-20 w-32 h-32 bg-white/5 rounded-full translate-y-12"></div>
         <div class="relative flex items-center justify-between">
@@ -84,7 +84,7 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <!-- Jadwal Hari Ini -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="dashboard-panel">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-gray-800">Jadwal Hari Ini</h3>
                 <span class="text-xs text-gray-400">{{ now()->locale('id')->isoFormat('dddd') }}</span>
@@ -109,7 +109,7 @@
         </div>
 
         <!-- Nilai Terbaru -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+        <div class="dashboard-panel">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-bold text-gray-800">Nilai Terbaru</h3>
                 <a href="{{ route('siswa.nilai') }}" class="text-xs text-secondary font-semibold hover:underline">Lihat Rapor →</a>
@@ -141,7 +141,7 @@
 
     <!-- Materi Terbaru -->
     @if($materiTerbaru->count())
-    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+    <div class="dashboard-panel">
         <div class="flex justify-between items-center mb-4">
             <h3 class="font-bold text-gray-800">Materi Terbaru</h3>
         </div>
@@ -156,7 +156,7 @@
                     <p class="text-xs text-gray-400">{{ $m->mataPelajaran->nama_mapel }}</p>
                 </div>
                 @if($m->file_path)
-                <a href="{{ Storage::url($m->file_path) }}" target="_blank"
+                <a href="{{ Storage::url($m->file_path) }}" target="_blank" rel="noopener noreferrer" aria-label="Unduh materi {{ $m->judul }}"
                    class="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center flex-shrink-0 hover:bg-primary transition">
                     <i class="fa-solid fa-download text-white text-xs"></i>
                 </a>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ sidebarOpen: true }">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,79 +14,35 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1E3A5F',
-                        secondary: '#2E86AB',
-                        accent: '#F4A261',
+                        primary: '#173F35',
+                        secondary: '#366B58',
+                        accent: '#D5B77A',
                     }
                 }
             }
         }
     </script>
-    <style>
-        [x-cloak] { display: none !important; }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 14px;
-            border-radius: 10px;
-            color: #bfdbfe;
-            font-size: 13.5px;
-            font-weight: 500;
-            transition: all 0.15s;
-            white-space: nowrap;
-        }
-        .sidebar-link:hover {
-            background: rgba(255,255,255,0.12);
-            color: #fff;
-        }
-        .sidebar-link.active {
-            background: rgba(255,255,255,0.18);
-            color: #fff;
-            font-weight: 600;
-        }
-        .sidebar-link i {
-            width: 18px;
-            text-align: center;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-        .sidebar-section {
-            padding: 16px 14px 4px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            color: #60a5fa;
-            text-transform: uppercase;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-            transition: box-shadow 0.2s, transform 0.2s;
-        }
-        .stat-card:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            transform: translateY(-1px);
-        }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+    <style>[x-cloak] { display: none !important; }</style>
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v=20261007">
+    <script src="{{ asset('js/dashboard.js') }}?v=20261007"></script>
     @stack('styles')
 </head>
-<body class="bg-slate-50" x-data="{ sidebarOpen: window.innerWidth >= 1024 }">
-<div class="flex h-screen overflow-hidden">
+<body class="school-app" x-data="schoolDashboard()" @keydown.escape.window="closeSidebar()">
+<a href="#dashboard-content" class="school-skip">Lewati ke konten utama</a>
+<div class="school-shell">
+    <div class="school-backdrop" x-show="sidebarOpen && !desktop" x-cloak @click="closeSidebar()" aria-hidden="true"></div>
 
     <!-- ===== SIDEBAR ===== -->
-    <aside :class="sidebarOpen ? 'w-60' : 'w-0 -translate-x-full lg:w-16 lg:translate-x-0'"
-           class="bg-primary transition-all duration-300 overflow-y-auto overflow-x-hidden flex-shrink-0 flex flex-col z-50 scrollbar-hide">
+    <aside id="school-sidebar" x-ref="sidebar" :class="{ 'is-collapsed': !sidebarOpen }"
+           :inert="!desktop && !sidebarOpen" :role="!desktop && sidebarOpen ? 'dialog' : null"
+           :aria-modal="!desktop && sidebarOpen ? 'true' : null" aria-label="Menu Smart School"
+           @keydown="trapSidebar($event)" class="school-sidebar">
+        <button type="button" class="lg:hidden self-end m-3 text-white p-2 rounded-lg hover:bg-white/10"
+                @click="closeSidebar()" aria-label="Tutup menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
 
         <!-- Logo -->
-        <div class="flex items-center gap-3 px-4 py-5 border-b border-white/10 flex-shrink-0">
-            <div class="w-9 h-9 bg-accent rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
+        <div class="school-brand flex items-center gap-3 flex-shrink-0">
+            <div class="school-logo w-9 h-9 bg-accent rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
                 <i class="fa-solid fa-graduation-cap text-white text-sm"></i>
             </div>
             <div x-show="sidebarOpen" x-transition>
@@ -96,12 +52,12 @@
         </div>
 
         <!-- Navigation -->
-        <nav class="flex-1 px-2 py-3 space-y-0.5">
+        <nav aria-label="Navigasi {{ str_replace('_', ' ', auth()->user()->role) }}" class="flex-1 px-2 py-3 space-y-0.5">
             @yield('sidebar')
         </nav>
 
         <!-- User Footer -->
-        <div class="p-2 border-t border-white/10 flex-shrink-0">
+        <div class="school-sidebar-footer flex-shrink-0">
             <div class="flex items-center gap-2.5 px-2 py-2 rounded-xl">
                 <div class="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0 text-white font-bold text-sm">
                     {{ substr(auth()->user()->name, 0, 1) }}
@@ -122,13 +78,13 @@
     </aside>
 
     <!-- ===== MAIN ===== -->
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+    <div class="school-main-shell" :inert="sidebarOpen && !desktop">
 
         <!-- Topbar -->
-        <header class="bg-white border-b border-gray-100 px-5 py-3.5 flex items-center justify-between flex-shrink-0 shadow-sm">
+        <header class="school-topbar flex items-center justify-between flex-shrink-0">
             <div class="flex items-center gap-3">
-                <button @click="sidebarOpen = !sidebarOpen"
-                        class="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
+                <button type="button" x-ref="sidebarToggle" @click="toggleSidebar()" :aria-expanded="sidebarOpen.toString()"
+                        aria-controls="school-sidebar" aria-label="Buka atau tutup menu" class="school-icon-button">
                     <i class="fa-solid fa-bars text-sm"></i>
                 </button>
                 <div>
@@ -138,17 +94,18 @@
             </div>
 
             <div class="flex items-center gap-2">
+                <time class="school-date" datetime="{{ now()->toDateString() }}">{{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }}</time>
                 <!-- Notifikasi -->
-                <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open"
+                <div x-data="{ open: false }" @keydown.escape.stop="open = false; $refs.notificationButton.focus()" class="relative">
+                    <button type="button" x-ref="notificationButton" @click="open = !open" aria-label="Notifikasi" aria-controls="notifications-panel" :aria-expanded="open.toString()"
                             class="relative p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
                         <i class="fa-solid fa-bell text-sm"></i>
                         @if(auth()->user()->notifikasiTidakDibaca()->count() > 0)
                             <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
                         @endif
                     </button>
-                    <div x-show="open" @click.away="open = false" x-cloak
-                         class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+                    <div id="notifications-panel" x-show="open" @click.away="open = false" x-cloak
+                         class="school-notifications absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
                         <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                             <h3 class="font-semibold text-gray-800 text-sm">Notifikasi</h3>
                             <span class="text-xs bg-secondary text-white px-2 py-0.5 rounded-full">{{ auth()->user()->notifikasiTidakDibaca()->count() }} baru</span>
@@ -178,8 +135,8 @@
                 </div>
 
                 <!-- Avatar with Dropdown -->
-                <div x-data="{ openProfile: false }" class="relative pl-2 border-l border-gray-100">
-                    <button @click="openProfile = !openProfile" class="flex items-center gap-2 hover:bg-gray-50 rounded-xl px-1.5 py-1 transition">
+                <div x-data="{ openProfile: false }" @keydown.escape.stop="openProfile = false; $refs.profileButton.focus()" class="relative pl-2 border-l border-gray-100">
+                    <button type="button" x-ref="profileButton" @click="openProfile = !openProfile" aria-label="Menu akun" aria-controls="profile-panel" :aria-expanded="openProfile.toString()" class="flex items-center gap-2 hover:bg-gray-50 rounded-xl px-1.5 py-1 transition">
                         <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-sm">
                             {{ substr(auth()->user()->name, 0, 1) }}
                         </div>
@@ -189,12 +146,12 @@
                         </div>
                         <i class="fa-solid fa-chevron-down text-gray-400 text-xs hidden sm:block"></i>
                     </button>
-                    <div x-show="openProfile" @click.away="openProfile = false" x-cloak
+                    <div id="profile-panel" x-show="openProfile" @click.away="openProfile = false" x-cloak
                          class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
                         <a href="{{ route('profile.edit') }}" class="flex items-center gap-2.5 px-4 py-3 hover:bg-gray-50 transition text-sm text-gray-700">
                             <i class="fa-solid fa-user-gear text-gray-400 w-4"></i> Profil Saya
                         </a>
-                        <a href="{{ route('landing') }}" target="_blank" class="flex items-center gap-2.5 px-4 py-3 hover:bg-gray-50 transition text-sm text-gray-700 border-t border-gray-50">
+                        <a href="{{ route('landing') }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-4 py-3 hover:bg-gray-50 transition text-sm text-gray-700 border-t border-gray-50">
                             <i class="fa-solid fa-globe text-gray-400 w-4"></i> Lihat Website
                         </a>
                         <form method="POST" action="{{ route('logout') }}" class="border-t border-gray-50">
@@ -209,7 +166,8 @@
         </header>
 
         <!-- Flash Messages -->
-        <div class="px-5 pt-4">
+        @if(session('success') || session('error'))
+        <div class="school-flashes" role="status">
             @if(session('success'))
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
                      x-transition
@@ -226,9 +184,10 @@
             @endif
         </div>
 
+        @endif
         <!-- Page Content -->
-        <main class="flex-1 overflow-y-auto px-5 py-4 scrollbar-hide">
-            @yield('content')
+        <main id="dashboard-content" tabindex="-1" class="school-content">
+            <div class="school-content-inner">@yield('content')</div>
         </main>
     </div>
 </div>
