@@ -9,8 +9,7 @@
         <form class="flex flex-wrap gap-3 items-center">
             <span class="text-sm font-semibold text-gray-600">Periode:</span>
             <select name="tahun_ajaran" class="px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary">
-                <option value="2024/2025" {{ $tahunAjaran == '2024/2025' ? 'selected' : '' }}>2024/2025</option>
-                <option value="2025/2026" {{ $tahunAjaran == '2025/2026' ? 'selected' : '' }}>2025/2026</option>
+                @foreach(\App\Services\SchoolContext::years() as $year)<option value="{{ $year }}" @selected($tahunAjaran === $year)>{{ $year }}</option>@endforeach
             </select>
             <select name="semester" class="px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary">
                 <option value="1" {{ $semester == '1' ? 'selected' : '' }}>Semester 1</option>

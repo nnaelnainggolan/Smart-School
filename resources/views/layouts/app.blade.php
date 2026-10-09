@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v=20261007">
     <script src="{{ asset('js/dashboard.js') }}?v=20261007"></script>
     @stack('styles')
-</head>
+<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#173f35"></head>
 <body class="school-app" x-data="schoolDashboard()" @keydown.escape.window="closeSidebar()">
 <a href="#dashboard-content" class="school-skip">Lewati ke konten utama</a>
 <div class="school-shell">
@@ -54,6 +54,7 @@
         <!-- Navigation -->
         <nav aria-label="Navigasi {{ str_replace('_', ' ', auth()->user()->role) }}" class="flex-1 px-2 py-3 space-y-0.5">
             @yield('sidebar')
+            <a href="{{ route('school.hub') }}" class="sidebar-link {{ request()->routeIs('school.*') ? 'active' : '' }}"><i class="fa-solid fa-school"></i><span x-show="sidebarOpen">Layanan Sekolah</span></a>
         </nav>
 
         <!-- User Footer -->
@@ -121,6 +122,8 @@
                                             <p class="text-xs font-semibold text-gray-800">{{ $notif->judul }}</p>
                                             <p class="text-xs text-gray-500 mt-0.5 leading-relaxed">{{ $notif->pesan }}</p>
                                             <p class="text-xs text-gray-400 mt-1">{{ $notif->created_at->diffForHumans() }}</p>
+                                            @if(!$notif->dibaca)<form method="POST" action="{{ route('school.notifications.read',$notif) }}">@csrf @method('PUT')<button class="text-xs underline py-2">Tandai dibaca</button></form>@endif
+                                            @if($notif->url && str_starts_with($notif->url, url('/').'/'))<a class="text-xs underline" href="{{ $notif->url }}">Buka</a>@endif
                                         </div>
                                     </div>
                                 </div>
@@ -187,10 +190,15 @@
         @endif
         <!-- Page Content -->
         <main id="dashboard-content" tabindex="-1" class="school-content">
-            <div class="school-content-inner">@yield('content')</div>
+            <div class="school-content-inner">
+                @if($errors->any())<div role="alert" class="mb-4 p-4 rounded-xl bg-red-50 text-red-800"><strong>Periksa kembali isian:</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
+                @if(auth()->user()->role === 'orang_tua' && auth()->user()->orangTua && request()->routeIs('orang_tua.*'))
+                <form method="GET" class="mb-4 flex flex-wrap gap-2 items-center"><label for="anak">Pantau anak:</label><select id="anak" name="anak" class="border rounded-lg p-2" onchange="this.form.submit()">@foreach(auth()->user()->orangTua->siswa()->with('user')->get() as $child)<option value="{{ $child->id }}" @selected(session('selected_child', auth()->user()->orangTua->siswa()->value('id')) == $child->id)>{{ $child->user->name }}</option>@endforeach</select><button class="border rounded-lg px-3 py-2">Tampilkan</button></form>
+                @endif
+                @yield('content')</div>
         </main>
     </div>
 </div>
 @stack('scripts')
-</body>
+<script src="/js/pwa.js" defer></script></body>
 </html>

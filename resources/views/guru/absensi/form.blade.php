@@ -52,7 +52,7 @@
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-sm">
+                <table class="w-full text-sm attendance-table">
                     <thead><tr class="bg-gray-50 border-b border-gray-100">
                         <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase w-8">#</th>
                         <th class="px-5 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase">Nama Siswa</th>
@@ -69,17 +69,17 @@
                         <td class="px-5 py-3.5">
                             <div class="flex items-center gap-2">
                                 <div class="w-7 h-7 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0"><span class="text-white text-xs font-bold">{{ substr($s->user->name,0,1) }}</span></div>
-                                <p class="font-medium text-gray-800">{{ $s->user->name }}</p>
+                                <p class="font-medium text-gray-800">{{ $s->user->name }} @if(isset($approved[$s->id]))<small class="block text-secondary">Izin disetujui: {{ $approved[$s->id]->type }}</small>@endif</p>
                             </div>
                         </td>
                         @foreach(['Hadir','Izin','Sakit','Alpha'] as $st)
                         <td class="px-5 py-3.5 text-center">
-                            <input type="radio" name="absensi[{{ $s->id }}][status]" value="{{ $st }}" class="w-4 h-4 text-secondary"
-                                {{ isset($existing[$s->id]) && $existing[$s->id]->status === $st ? 'checked' : ($st === 'Hadir' && !isset($existing[$s->id]) ? 'checked' : '') }}>
+                            <label class="inline-flex items-center gap-2"><span class="sm:hidden">{{ $st }}</span><input aria-label="{{ $st }} untuk {{ $s->user->name }}" type="radio" name="absensi[{{ $s->id }}][status]" value="{{ $st }}" class="w-4 h-4 text-secondary"
+                                @checked(old('absensi.'.$s->id.'.status', $existing[$s->id]->status ?? $approved[$s->id]->type ?? 'Hadir') === $st)></label>
                         </td>
                         @endforeach
                         <td class="px-5 py-3.5">
-                            <input type="text" name="absensi[{{ $s->id }}][keterangan]" value="{{ $existing[$s->id]->keterangan ?? '' }}" placeholder="Opsional..." class="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-secondary">
+                            <input type="text" name="absensi[{{ $s->id }}][keterangan]" value="{{ old('absensi.'.$s->id.'.keterangan', $existing[$s->id]->keterangan ?? '') }}" placeholder="Opsional..." class="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-secondary">
                         </td>
                     </tr>
                     @empty
@@ -98,9 +98,15 @@
 @push('scripts')
 <script>
 document.getElementById('tanggalPicker').addEventListener('change', function() {
-    document.getElementById('tanggalInput').value = this.value;
+    if (!this.value) return;
+    if (window.absensiDirty && !confirm('Perubahan belum disimpan. Ganti tanggal?')) { this.value = document.getElementById('tanggalInput').value; return; }
+    const url = new URL(window.location.href);
+    url.searchParams.set('tanggal', this.value);
+    window.location.assign(url);
 });
+document.getElementById('absensiForm').addEventListener('change', () => window.absensiDirty = true);
 function setAllStatus(status) {
+    window.absensiDirty = true;
     document.querySelectorAll(`input[type="radio"][value="${status}"]`).forEach(r => r.checked = true);
 }
 </script>

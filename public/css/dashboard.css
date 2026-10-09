@@ -695,3 +695,18 @@ body.school-app {
         scroll-behavior: auto !important;
     }
 }
+/* Mobile attendance uses one card per student, with native labelled controls. */
+@media(max-width:639px){
+.attendance-table thead{display:none}
+.attendance-table,.attendance-table tbody{display:block;width:100%}
+.attendance-table tr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:14px;border-bottom:1px solid var(--school-line);gap:8px}
+.attendance-table td{padding:8px 0;display:block}
+.attendance-table td:first-child{display:none}
+.attendance-table td:nth-child(2),.attendance-table td:last-child{grid-column:1/-1}
+.attendance-table label{min-height:44px;flex-direction:column;font-size:12px;justify-content:center}
+.attendance-table input[type=radio]{width:22px;height:22px}
+.school-content input,.school-content select,.school-content textarea{max-width:100%}
+}
+@media(max-width:639px){
+.grade-table,.grade-table tbody{display:block;width:100%}.grade-table thead{display:none}.grade-table tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding:14px;gap:8px;border-bottom:1px solid var(--school-line)}.grade-table td{display:block;padding:4px;min-width:0}.grade-table td:first-child{display:none}.grade-table td:nth-child(2),.grade-table td:last-child{grid-column:1/-1}.grade-table td:nth-child(3):before{content:'Harian';display:block}.grade-table td:nth-child(4):before{content:'UTS';display:block}.grade-table td:nth-child(5):before{content:'UAS';display:block}.grade-table td:nth-child(6):before{content:'Akhir';display:block}.grade-table input{width:100%;min-height:44px}
+}

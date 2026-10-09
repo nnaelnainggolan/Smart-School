@@ -43,20 +43,16 @@
                                ($k->status === 'selesai' ? 'bg-gray-100 text-gray-600' : 'bg-red-100 text-red-600'))) }}">
                             {{ ucfirst($k->status) }}
                         </span>
-                        @if($k->status_psikologis)
-                        <span class="px-2 py-0.5 rounded text-xs font-medium {{ $k->status_psikologis === 'baik' ? 'bg-green-100 text-green-700' : ($k->status_psikologis === 'kritis' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700') }}">
-                            Psikologis: {{ str_replace('_',' ', $k->status_psikologis) }}
-                        </span>
-                        @endif
+
                     </div>
                     <h3 class="font-semibold text-gray-800">{{ $k->topik }}</h3>
                     @if($k->guruBK)
                     <p class="text-xs text-gray-500 mt-1">Konselor: {{ $k->guruBK->user->name }}</p>
                     @endif
-                    @if($k->catatan_bk)
+                    @if($k->ringkasan_ortu)
                     <div class="mt-2 bg-green-50 border border-green-100 rounded-lg p-2.5">
                         <p class="text-xs font-semibold text-green-700">Catatan Guru BK:</p>
-                        <p class="text-xs text-green-800 mt-0.5">{{ $k->catatan_bk }}</p>
+                        <p class="text-xs text-green-800 mt-0.5">{{ $k->ringkasan_ortu }}</p>
                     </div>
                     @endif
                     @if($k->jadwal_konseling)
