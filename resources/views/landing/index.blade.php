@@ -176,7 +176,7 @@ html{scroll-padding-top:var(--nav-height)}
  #kontak iframe{height:180px}
 }
 </style>
-</head>
+<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#173f35"></head>
 <body>
 <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
 <!-- ===== NAVBAR ===== -->
@@ -429,35 +429,9 @@ html{scroll-padding-top:var(--nav-height)}
             <!-- Form Pendaftaran Minat -->
             <div class="bg-white rounded-3xl p-8 shadow-2xl">
                 <h3 class="text-xl font-black text-gray-800 mb-2">Daftar Minat Online</h3>
-                <p class="text-sm text-gray-500 mb-6">Isi formulir ini dan tim kami akan menghubungi Anda</p>
-                <form class="space-y-4" onsubmit="handlePPDB(event)">
-                    <div>
-                        <label for="nama" class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Calon Siswa *</label>
-                        <input type="text" required id="nama" name="nama" autocomplete="name" placeholder="Nama lengkap" class="w-full px-4 py-2.5 border-2 border-gray-100 rounded-xl focus:outline-none focus:border-secondary transition bg-gray-50 text-sm">
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label for="telepon" class="block text-sm font-semibold text-gray-700 mb-1.5">No. HP Orang Tua *</label>
-                            <input type="tel" required id="telepon" name="telepon" autocomplete="tel" placeholder="08xx-xxxx-xxxx" class="w-full px-4 py-2.5 border-2 border-gray-100 rounded-xl focus:outline-none focus:border-secondary transition bg-gray-50 text-sm">
-                        </div>
-                        <div>
-                            <label for="jurusan" class="block text-sm font-semibold text-gray-700 mb-1.5">Pilihan Jurusan</label>
-                            <select id="jurusan" name="jurusan" class="w-full px-4 py-2.5 border-2 border-gray-100 rounded-xl focus:outline-none focus:border-secondary transition bg-gray-50 text-sm">
-                                <option>IPA (MIPA)</option>
-                                <option>IPS</option>
-                                <option>Bahasa & TIK</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label for="asal-sekolah" class="block text-sm font-semibold text-gray-700 mb-1.5">Asal Sekolah *</label>
-                        <input type="text" required id="asal-sekolah" name="asal-sekolah" autocomplete="organization" placeholder="Nama SMP/MTs asal" class="w-full px-4 py-2.5 border-2 border-gray-100 rounded-xl focus:outline-none focus:border-secondary transition bg-gray-50 text-sm">
-                    </div>
-                    <button type="submit" class="w-full py-3.5 bg-primary text-white rounded-xl font-bold hover:bg-secondary transition shadow-lg flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-paper-plane"></i> Kirim Pendaftaran
-                    </button>
-                    <p class="text-xs text-gray-400 text-center">Dengan mendaftar, Anda menyetujui syarat & ketentuan yang berlaku</p>
-                </form>
+                <p class="text-sm text-gray-500 mb-6">Daftar melalui formulir dan simpan nomor pendaftaran untuk memantau status.</p>
+                <a href="{{ route('ppdb.form') }}" class="button-primary">Isi formulir pendaftaran →</a>
+                <p class="mt-4"><a href="{{ route('ppdb.status') }}" class="underline">Cek status pendaftaran</a></p>
                 <div id="ppdb-success" role="status" aria-live="polite" class="hidden mt-4 bg-green-50 border border-green-200 rounded-xl p-4 text-center">
                     <i class="fa-solid fa-circle-check text-green-500 text-2xl mb-2 block"></i>
                     <p class="text-green-700 font-semibold text-sm">Formulir belum terhubung ke sistem pendaftaran.</p>
@@ -492,7 +466,7 @@ html{scroll-padding-top:var(--nav-height)}
                     <p class="text-gray-500 text-sm leading-relaxed line-clamp-2 mb-4">{{ Str::limit(strip_tags($b->konten), 100) }}</p>
                     <div class="flex items-center justify-between">
                         <span class="text-xs text-gray-400"><i class="fa-regular fa-calendar mr-1"></i>{{ $b->published_at?->format('d M Y') }}</span>
-                        <a href="{{ route('login') }}" class="text-xs text-secondary font-bold hover:underline">Baca →</a>
+                        <a href="{{ route('berita.show', $b) }}" class="text-xs text-secondary font-bold hover:underline">Baca →</a>
                     </div>
                 </div>
             </div>
@@ -725,11 +699,6 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 // PPDB form
-function handlePPDB(e) {
-    e.preventDefault();
-    document.getElementById('ppdb-success').classList.remove('hidden');
-
-}
 // All sections remain visible; native anchor links align below the fixed navbar.
 (() => {
     const sections = [...document.querySelectorAll('#main-content > section[id]')];
@@ -786,5 +755,5 @@ function handlePPDB(e) {
  render();
 })();
 </script>
-</body>
+<script src="/js/pwa.js" defer></script></body>
 </html>

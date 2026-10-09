@@ -1,0 +1,9 @@
+@forelse($students as $s)<section class="dashboard-panel p-5 space-y-3"><h3 class="font-bold">{{ $s->user->name }} · {{ $s->kelas?->nama_kelas }}</h3>
+<p>{{ $s->alpha_count }} Alpha per pelajaran dalam {{ config('school.lookback_days') }} hari. @if($s->alpha_count>=config('school.alpha_threshold'))<strong class="text-red-700">Perlu ditinjau: melewati ambang {{ config('school.alpha_threshold') }}.</strong>@endif</p>
+@if($s->current_average !== null && $s->previous_average !== null && $s->previous_average-$s->current_average >= config('school.grade_drop_threshold'))
+<p class="text-red-700">Perlu ditinjau: rata-rata periode aktif {{ number_format($s->current_average,1) }} turun dari {{ number_format($s->previous_average,1) }} pada semester sebelumnya. Komposisi mata pelajaran dapat berbeda; periksa sebelum menyimpulkan.</p>
+@endif
+@foreach($notes[$s->id]??[] as $n)<div class="border rounded p-3"><p>{{ $n->note }}</p><small>{{ $n->due_date }} · {{ $n->status }}</small>@if($n->status==='open')<form method="POST" action="{{ route('school.followup.close',$n) }}">@csrf @method('PUT')<button class="underline py-2">Tandai selesai</button></form>@endif</div>@endforeach
+<form method="POST" action="{{ route('school.followup.store') }}" class="space-y-2">@csrf<input type="hidden" name="siswa_id" value="{{ $s->id }}"><label class="block">Rencana / hasil tindak lanjut<textarea name="note" required maxlength="2000" class="block border p-2 w-full"></textarea></label><label class="block">Tanggal tindak lanjut<input type="date" name="due_date" class="block border p-2"></label><button class="bg-primary text-white p-3 rounded-lg">Simpan catatan</button></form>
+</section>@empty<p>Belum ada siswa dalam penugasan Anda. Admin dapat menetapkan wali kelas pada menu Periode & Kelas.</p>@endforelse
+{{ $students->links() }}

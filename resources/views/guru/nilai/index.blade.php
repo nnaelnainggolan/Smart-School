@@ -42,11 +42,11 @@
                 @endforeach
             </select>
             <select name="tahun_ajaran" required class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary">
-                @foreach(['2024/2025','2025/2026'] as $ta)<option value="{{ $ta }}" {{ request('tahun_ajaran') == $ta ? 'selected' : '' }}>{{ $ta }}</option>@endforeach
+                @foreach(\App\Services\SchoolContext::years() as $ta)<option value="{{ $ta }}" {{ request('tahun_ajaran', \App\Services\SchoolContext::period()['tahun_ajaran']) == $ta ? 'selected' : '' }}>{{ $ta }}</option>@endforeach
             </select>
             <select name="semester" required class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary">
-                <option value="1" {{ request('semester') == '1' ? 'selected' : '' }}>Semester 1</option>
-                <option value="2" {{ request('semester') == '2' ? 'selected' : '' }}>Semester 2</option>
+                <option value="1" {{ request('semester', \App\Services\SchoolContext::period()['semester']) == '1' ? 'selected' : '' }}>Semester 1</option>
+                <option value="2" {{ request('semester', \App\Services\SchoolContext::period()['semester']) == '2' ? 'selected' : '' }}>Semester 2</option>
             </select>
             <div class="sm:col-span-2 lg:col-span-4">
                 <button type="submit" class="px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-secondary transition">Tampilkan Form Nilai</button>

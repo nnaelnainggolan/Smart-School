@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <div class="text-right">
-                    <p class="font-bold text-base {{ $n->nilai_akhir >= 75 ? 'text-green-600' : 'text-red-500' }}">{{ $n->nilai_akhir ? number_format($n->nilai_akhir,1) : '-' }}</p>
+                    <p class="font-bold text-base {{ $n->nilai_akhir >= 75 ? 'text-green-600' : 'text-red-500' }}">{{ $n->nilai_akhir !== null ? number_format($n->nilai_akhir,1) : '-' }}</p>
                     <span class="text-xs px-1.5 py-0.5 rounded font-bold {{ $n->predikat === 'A' ? 'bg-green-100 text-green-700' : ($n->predikat === 'B' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700') }}">{{ $n->predikat ?? '-' }}</span>
                 </div>
             </div>
@@ -156,7 +156,7 @@
                     <p class="text-xs text-gray-400">{{ $m->mataPelajaran->nama_mapel }}</p>
                 </div>
                 @if($m->file_path)
-                <a href="{{ Storage::url($m->file_path) }}" target="_blank" rel="noopener noreferrer" aria-label="Unduh materi {{ $m->judul }}"
+                <a href="{{ route('school.material', $m) }}" target="_blank" rel="noopener noreferrer" aria-label="Unduh materi {{ $m->judul }}"
                    class="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center flex-shrink-0 hover:bg-primary transition">
                     <i class="fa-solid fa-download text-white text-xs"></i>
                 </a>

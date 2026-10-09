@@ -45,7 +45,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Tahun Ajaran <span class="text-red-500">*</span></label>
                     <select name="tahun_ajaran" required class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary">
-                        <option value="2024/2025">2024/2025</option><option value="2025/2026">2025/2026</option>
+                        @foreach(\App\Services\SchoolContext::years() as $year)<option @selected($year === \App\Services\SchoolContext::period()['tahun_ajaran'])>{{ $year }}</option>@endforeach
                     </select>
                 </div>
                 <div><label class="block text-sm font-semibold text-gray-700 mb-1.5">Semester <span class="text-red-500">*</span></label>

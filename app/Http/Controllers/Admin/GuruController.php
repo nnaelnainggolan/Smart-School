@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, Guru};
+use App\Models\Guru;
+use App\Models\User;
+use App\Services\HistoryGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -12,10 +15,11 @@ class GuruController extends Controller
     {
         $query = Guru::with('user');
         if ($request->search) {
-            $query->whereHas('user', fn($q) => $q->where('name', 'like', "%{$request->search}%"))
-                  ->orWhere('nip', 'like', "%{$request->search}%");
+            $query->whereHas('user', fn ($q) => $q->where('name', 'like', "%{$request->search}%"))
+                ->orWhere('nip', 'like', "%{$request->search}%");
         }
         $guru = $query->latest()->paginate(15);
+
         return view('admin.guru.index', compact('guru'));
     }
 
@@ -60,6 +64,7 @@ class GuruController extends Controller
     public function edit(Guru $guru)
     {
         $guru->load('user');
+
         return view('admin.guru.edit', compact('guru'));
     }
 
@@ -67,13 +72,16 @@ class GuruController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255']);
         $guru->user->update(['name' => $request->name, 'is_active' => $request->boolean('is_active')]);
-        $guru->update($request->only(['nip','no_hp','jenis_kelamin','tanggal_lahir','alamat','pendidikan_terakhir','jabatan']));
+        $guru->update($request->only(['nip', 'no_hp', 'jenis_kelamin', 'tanggal_lahir', 'alamat', 'pendidikan_terakhir', 'jabatan']));
+
         return redirect()->route('admin.guru.index')->with('success', 'Data guru berhasil diperbarui.');
     }
 
     public function destroy(Guru $guru)
     {
+        HistoryGuard::check($guru, ['jadwal', 'absensi', 'nilai', 'materi', 'konseling', 'waliKelas']);
         $guru->user->delete();
+
         return redirect()->route('admin.guru.index')->with('success', 'Guru berhasil dihapus.');
     }
 }

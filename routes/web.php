@@ -1,23 +1,24 @@
 <?php
-use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\LandingController;
+use Illuminate\Support\Facades\Route;
 
 // ============ HEALTH CHECK (untuk Railway) ============
-Route::get('/up', fn() => response('OK', 200));
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\LoginController;
+Route::get('/up', fn () => response('OK', 200));
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Guru;
-use App\Http\Controllers\Siswa;
 use App\Http\Controllers\GuruBK;
 use App\Http\Controllers\OrangTua;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Siswa;
 
 // ============ LANDING PAGE ============
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 // ============ AUTH ============
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // ============ PROFILE (semua role) ============
@@ -36,10 +37,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('orangtua', Admin\OrangTuaController::class);
     Route::put('/orangtua/{orangtua}/reset-password', [Admin\OrangTuaController::class, 'resetPassword'])->name('orangtua.reset_password');
     Route::resource('kelas', Admin\KelasController::class)->parameters(['kelas' => 'kelas']);
-    Route::resource('jadwal', Admin\JadwalController::class)->except(['show','edit','update']);
+    Route::resource('jadwal', Admin\JadwalController::class)->except(['show', 'edit', 'update']);
     Route::resource('mapel', Admin\MataPelajaranController::class);
     Route::resource('berita', Admin\BeritaController::class)->parameters(['berita' => 'berita']);
-    Route::resource('kalender', Admin\KalenderController::class)->except(['show','edit','update']);
+    Route::resource('kalender', Admin\KalenderController::class)->except(['show', 'edit', 'update']);
 
     Route::get('/laporan', [Admin\LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/cetak-rapor', [Admin\LaporanController::class, 'cetakRapor'])->name('laporan.cetak_rapor');
@@ -58,9 +59,9 @@ Route::prefix('guru')->name('guru.')->middleware(['auth', 'role:guru'])->group(f
     Route::get('/nilai/form', [Guru\NilaiController::class, 'form'])->name('nilai.form');
     Route::post('/nilai', [Guru\NilaiController::class, 'store'])->name('nilai.store');
 
-    Route::resource('materi', Guru\MateriController::class)->except(['show','edit','update']);
+    Route::resource('materi', Guru\MateriController::class)->except(['show', 'edit', 'update']);
 
-    Route::match(['get','post'], '/pesan', [Guru\PesanController::class, 'index'])->name('pesan.index');
+    Route::match(['get', 'post'], '/pesan', [Guru\PesanController::class, 'index'])->name('pesan.index');
 });
 
 // ============ SISWA ============
@@ -94,5 +95,7 @@ Route::prefix('orang-tua')->name('orang_tua.')->middleware(['auth', 'role:orang_
     Route::get('/nilai', [OrangTua\MonitorController::class, 'nilai'])->name('nilai');
     Route::get('/absensi', [OrangTua\MonitorController::class, 'absensi'])->name('absensi');
     Route::get('/konseling', [OrangTua\MonitorController::class, 'konseling'])->name('konseling');
-    Route::match(['get','post'], '/pesan', [OrangTua\MonitorController::class, 'pesan'])->name('pesan');
+    Route::match(['get', 'post'], '/pesan', [OrangTua\MonitorController::class, 'pesan'])->name('pesan');
 });
+
+require __DIR__.'/school.php';

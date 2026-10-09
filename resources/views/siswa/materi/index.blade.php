@@ -63,7 +63,7 @@
                     <span class="text-xs text-gray-500">{{ $m->guru->user->name }}</span>
                 </div>
                 @if($m->file_path)
-                <a href="{{ Storage::url($m->file_path) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-secondary transition">
+                <a href="{{ route('school.material', $m) }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-secondary transition">
                     <i class="fa-solid fa-download"></i> Unduh
                 </a>
                 @endif
