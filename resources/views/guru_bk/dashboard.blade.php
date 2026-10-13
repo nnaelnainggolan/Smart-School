@@ -19,7 +19,7 @@
 @endsection
 
 @section('content')
-<div class="dashboard-page space-y-6">
+<div class="dashboard-page role-dashboard space-y-6">
     <div class="dashboard-welcome bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-10 translate-x-10"></div>
         <div class="relative">
@@ -56,9 +56,11 @@
                 <i class="fa-solid fa-users text-purple-500 text-xl"></i>
             </div>
             <p class="text-3xl font-bold text-gray-800">{{ $stats['total_siswa'] }}</p>
-            <p class="text-xs text-gray-500 mt-1">Total Siswa</p>
+            <p class="text-xs text-gray-500 mt-1">Siswa aktif sekolah</p>
         </div>
     </div>
+
+    @include('dashboard.insights')
 
     <div class="dashboard-panel">
         <div class="flex justify-between items-center mb-5">
