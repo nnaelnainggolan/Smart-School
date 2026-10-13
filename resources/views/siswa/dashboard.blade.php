@@ -29,7 +29,7 @@
 @endsection
 
 @section('content')
-<div class="dashboard-page space-y-6">
+<div class="dashboard-page role-dashboard space-y-6">
     <!-- Hero Banner -->
     <div class="dashboard-welcome bg-gradient-to-r from-primary to-secondary rounded-2xl p-6 text-white relative overflow-hidden">
         <div class="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full -translate-y-16 translate-x-16"></div>
@@ -56,8 +56,8 @@
             <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                 <i class="fa-solid fa-star text-blue-500"></i>
             </div>
-            <p class="text-2xl font-bold text-gray-800">{{ $nilaiTerbaru->avg('nilai_akhir') ? number_format($nilaiTerbaru->avg('nilai_akhir'),1) : '-' }}</p>
-            <p class="text-xs text-gray-500 mt-1">Rata-rata Nilai</p>
+            <p class="text-2xl font-bold text-gray-800">{{ $nilaiTerbaru->avg('nilai_akhir') !== null ? number_format($nilaiTerbaru->avg('nilai_akhir'),1) : '-' }}</p>
+            <p class="text-xs text-gray-500 mt-1">Rata-rata periode aktif</p>
         </div>
         <div class="stat-card text-center">
             <div class="w-10 h-10 {{ $totalAbsensiAlpha > 3 ? 'bg-red-100' : 'bg-green-100' }} rounded-xl flex items-center justify-center mx-auto mb-2">
@@ -78,9 +78,11 @@
                 <i class="fa-solid fa-book text-orange-500"></i>
             </div>
             <p class="text-2xl font-bold text-gray-800">{{ $materiTerbaru->count() }}</p>
-            <p class="text-xs text-gray-500 mt-1">Materi Tersedia</p>
+            <p class="text-xs text-gray-500 mt-1">Materi terbaru ditampilkan</p>
         </div>
     </div>
+
+    @include('dashboard.insights')
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <!-- Jadwal Hari Ini -->
@@ -126,7 +128,7 @@
                     </div>
                 </div>
                 <div class="text-right">
-                    <p class="font-bold text-base {{ $n->nilai_akhir >= 75 ? 'text-green-600' : 'text-red-500' }}">{{ $n->nilai_akhir !== null ? number_format($n->nilai_akhir,1) : '-' }}</p>
+                    <p class="font-bold text-base {{ $n->nilai_akhir !== null && $n->nilai_akhir >= $n->mataPelajaran->kkm ? 'text-green-600' : 'text-red-500' }}">{{ $n->nilai_akhir !== null ? number_format($n->nilai_akhir,1) : '-' }}</p>
                     <span class="text-xs px-1.5 py-0.5 rounded font-bold {{ $n->predikat === 'A' ? 'bg-green-100 text-green-700' : ($n->predikat === 'B' ? 'bg-blue-100 text-blue-700' : 'bg-yellow-100 text-yellow-700') }}">{{ $n->predikat ?? '-' }}</span>
                 </div>
             </div>

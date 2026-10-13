@@ -1,0 +1,54 @@
+:root{--school-forest:#234d3c;--school-sage:#dde8dd;--school-ivory:#f6f7f2;--school-ink:#24332c}
+.role-dashboard{gap:24px!important;max-width:1440px;margin-inline:auto}
+.role-dashboard .dashboard-welcome{background:linear-gradient(115deg,#234d3c,#37614b)!important;border-radius:22px;padding:28px 30px!important;box-shadow:none;min-height:138px}
+.role-dashboard .dashboard-welcome h2{font-size:clamp(23px,2.2vw,30px);letter-spacing:-.65px;line-height:1.25;overflow-wrap:anywhere}
+.role-dashboard .dashboard-welcome p{color:#e1ecdf!important;line-height:1.65}
+.role-dashboard .stat-card{border:1px solid #e0e7dc;border-radius:18px;padding:21px 22px;box-shadow:0 3px 14px #234d3c04;min-height:118px;text-align:left}
+.role-dashboard .stat-card.text-center{display:grid;grid-template-columns:minmax(0,1fr) 44px;column-gap:14px;align-content:center;align-items:center}
+.role-dashboard .stat-card.text-center>div{grid-row:1/3;margin:0;width:44px;height:44px;background:#e6eee3!important;color:#315641!important}
+.role-dashboard .stat-card.text-center>div i{color:#315641!important}
+.role-dashboard .stat-card.text-center>p{margin:0;line-height:1.35;overflow-wrap:anywhere}
+.role-dashboard .stat-card.text-center>p:nth-child(2){font-size:28px;font-weight:750;color:#24332c!important;font-variant-numeric:tabular-nums}
+.role-dashboard .stat-card.text-center>p:last-child{font-size:12px;color:#596a60!important;margin-top:5px}
+.role-dashboard .stat-card>a,.role-dashboard .dashboard-stat-foot{font-size:12px}
+.role-dashboard .dashboard-panel,.insight-card{background:#fff;border:1px solid #e0e7dc;border-radius:20px;padding:24px;box-shadow:0 4px 18px #234d3c03;min-width:0}
+.role-dashboard .dashboard-panel h3{font-size:16px;color:#24332c}
+.role-dashboard :is(.text-gray-400,.text-gray-500){color:#657267!important}
+.role-dashboard .dashboard-chart-layout{min-height:0}
+.role-dashboard .admin-overview{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}
+.insights-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.insight-card{display:flex;flex-direction:column;overflow:hidden}
+.insight-kicker{font-size:10px;letter-spacing:1.7px;font-weight:750;color:#67816c}
+.insight-heading h3{font-size:18px;font-weight:750;letter-spacing:-.35px;color:#24332c;margin:6px 0}
+.insight-heading p{font-size:12px;line-height:1.65;color:#68776b;margin:0;min-height:40px}
+.insight-plot{margin:20px -8px 12px;min-height:170px;display:flex;align-items:center;flex:1}
+.insight-plot svg{width:100%;height:auto;overflow:visible}
+.plot-grid{stroke:#e6ece4;stroke-dasharray:4 5;stroke-width:1}
+.plot-line{stroke:#3d7156;stroke-width:3;stroke-linecap:round}
+.plot-dot{fill:#3d7156;stroke:#fff;stroke-width:2}
+.plot-label{fill:#657267;font-size:12px;font-family:inherit}
+.insight-bars{margin:18px 0;display:flex;flex-direction:column;gap:16px;max-height:242px;overflow-y:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:#b5c7b6 transparent;min-height:180px}
+.insight-bar-label{display:flex;justify-content:space-between;gap:14px;font-size:12px;line-height:1.5;margin-bottom:7px}
+.insight-bar-label span{overflow-wrap:anywhere;color:#435748}
+.insight-bar-label strong{white-space:nowrap;font-variant-numeric:tabular-nums;color:#24332c;font-weight:650}
+.insight-track{height:9px;background:#eff3eb;border-radius:6px;overflow:hidden}
+.insight-track span{height:100%;display:block;border-radius:6px;background:#47765a}
+.insight-track .tone-gold{background:#bb9552}.insight-track .tone-rose{background:#b96356}
+.insight-bar-row small{font-size:10px;color:#657267}
+.insight-footer{border-top:1px solid #edf0e9;padding-top:13px;margin-top:auto;font-size:11px;line-height:1.6;color:#657267}
+.insight-key{display:inline-block;width:7px;height:7px;background:#47765a;border-radius:50%;margin-right:6px}
+.insight-empty{min-height:220px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:10px;padding:25px 12px}
+.insight-empty i{font-size:23px;color:#809783;background:#f0f4ed;padding:14px;border-radius:15px}
+.insight-empty strong{font-size:14px;font-weight:650;color:#435748}
+.insight-empty p{font-size:12px;line-height:1.7;color:#68776b;max-width:300px}
+.insight-details{margin-bottom:14px;font-size:12px;color:#435748}
+.insight-details summary{cursor:pointer;padding:8px 0;min-height:34px;font-weight:600}
+.insight-table-wrap{max-height:220px;overflow:auto}
+.insight-details table{border-collapse:collapse;width:100%;font-size:12px}
+.insight-details th,.insight-details td{padding:9px 5px;border-bottom:1px solid #edf0e9;text-align:left;white-space:normal;overflow-wrap:anywhere}
+.insight-details tbody th{font-weight:400}.insight-details td{text-align:right;font-variant-numeric:tabular-nums}
+.insight-details small{display:block;color:#68776b}
+@media(min-width:1280px){.role-dashboard .dashboard-welcome{padding:30px 34px!important}.insight-card{min-height:360px}}
+@media(max-width:1000px){.insights-grid{grid-template-columns:1fr}.role-dashboard .admin-overview{grid-template-columns:1fr}.insight-plot{max-height:230px}.insight-plot svg{height:230px}}
+@media(max-width:600px){.role-dashboard{gap:18px!important}.role-dashboard .dashboard-welcome{padding:22px 18px!important;min-height:120px;border-radius:18px}.role-dashboard .dashboard-panel,.insight-card{padding:18px;border-radius:17px}.role-dashboard .stat-card{padding:15px 12px;min-height:108px}.role-dashboard .stat-card.text-center{display:flex;flex-direction:column;align-items:flex-start;gap:5px}.role-dashboard .stat-card.text-center>div{width:32px;height:32px;margin-bottom:4px}.role-dashboard .stat-card.text-center>p:nth-child(2){font-size:25px}.insight-heading h3{font-size:17px}.insights-grid{gap:18px}.insight-plot{margin:8px -10px;min-height:150px}.insight-plot svg{height:auto}.insight-bars{min-height:140px}.role-dashboard .dashboard-panel>div.flex{flex-wrap:wrap}.role-dashboard .dashboard-welcome .relative.flex{gap:12px}.role-dashboard .dashboard-welcome .relative.flex>div:first-child{min-width:0}.role-dashboard .dashboard-welcome .relative.flex>div:last-child:not(:first-child){display:none}}
+.school-app .role-dashboard .dashboard-welcome h2{color:#fff!important}

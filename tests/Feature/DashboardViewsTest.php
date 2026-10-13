@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\Absensi;
+use App\Models\AcademicPeriod;
 use App\Models\Berita;
+use App\Models\Nilai;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -17,6 +19,8 @@ class DashboardViewsTest extends TestCase
         parent::setUp();
         config(['app.key' => 'base64:'.base64_encode(str_repeat('a', 32))]);
         $this->seed();
+        $grade = Nilai::firstOrFail();
+        AcademicPeriod::updateOrCreate(['tahun_ajaran' => $grade->tahun_ajaran, 'semester' => $grade->semester], ['active' => true]);
     }
 
     public function test_each_role_can_render_its_dashboard_and_shared_navigation(): void
@@ -31,7 +35,7 @@ class DashboardViewsTest extends TestCase
                 ->assertSee('id="dashboard-content"', false)
                 ->assertSee('css/dashboard.css')
                 ->assertSee('js/dashboard.js')
-                ->assertSee('dashboard-welcome');
+                ->assertSee('dashboard-welcome')->assertSee('insights-grid')->assertSee('SMK Hasanuddin');
 
             // Optional local browser fixtures, generated from real Blade responses.
             if ($directory = getenv('DASHBOARD_QA_DIR')) {

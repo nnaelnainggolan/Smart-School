@@ -1,8 +1,15 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{User, Siswa, Guru, Kelas, Berita, Konseling, Absensi};
+use App\Models\Absensi;
+use App\Models\Berita;
+use App\Models\Guru;
+use App\Models\Kelas;
+use App\Models\Konseling;
+use App\Models\Siswa;
+use App\Services\DashboardInsights;
 
 class DashboardController extends Controller
 {
@@ -22,6 +29,8 @@ class DashboardController extends Controller
             ->selectRaw('status, count(*) as total')
             ->groupBy('status')->get()->pluck('total', 'status');
 
-        return view('admin.dashboard', compact('stats', 'berita_terbaru', 'absensi_hari_ini'));
+        $insights = app(DashboardInsights::class)->forUser(auth()->user());
+
+        return view('admin.dashboard', compact('insights', 'stats', 'berita_terbaru', 'absensi_hari_ini'));
     }
 }

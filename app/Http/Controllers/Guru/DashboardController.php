@@ -7,6 +7,7 @@ use App\Models\Absensi;
 use App\Models\Jadwal;
 use App\Models\Materi;
 use App\Models\Nilai;
+use App\Services\DashboardInsights;
 use App\Services\SchoolContext;
 
 class DashboardController extends Controller
@@ -14,11 +15,6 @@ class DashboardController extends Controller
     public function index()
     {
         $guru = auth()->user()->guru;
-        $jadwalHariIni = Jadwal::where(SchoolContext::period())->with(['kelas', 'mataPelajaran'])
-            ->where('guru_id', $guru->id)
-            ->where('hari', now()->locale('id')->dayName)
-            ->orderBy('jam_mulai')->get();
-
         $hariMap = ['Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa', 'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu'];
         $hariIni = $hariMap[now()->format('l')];
 
@@ -31,6 +27,8 @@ class DashboardController extends Controller
         $totalMateri = Materi::where('guru_id', $guru->id)->count();
         $totalNilai = Nilai::where('guru_id', $guru->id)->count();
 
-        return view('guru.dashboard', compact('guru', 'jadwalHariIni', 'totalAbsensiInput', 'totalMateri', 'totalNilai'));
+        $insights = app(DashboardInsights::class)->forUser(auth()->user());
+
+        return view('guru.dashboard', compact('insights', 'guru', 'jadwalHariIni', 'totalAbsensiInput', 'totalMateri', 'totalNilai'));
     }
 }
