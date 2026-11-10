@@ -10,7 +10,8 @@ class KonselingController extends Controller
     public function index(Request $request)
     {
         $guru = auth()->user()->guru;
-        $query = Konseling::with(['siswa.user']);
+        $query = Konseling::with(['siswa.user'])
+            ->where(fn ($q) => $q->whereNull('guru_bk_id')->orWhere('guru_bk_id', $guru->id));
         if ($request->status) $query->where('status', $request->status);
         $konseling = $query->latest()->paginate(15);
         return view('guru_bk.konseling.index', compact('konseling'));
@@ -18,6 +19,8 @@ class KonselingController extends Controller
 
     public function show(Konseling $konseling)
     {
+        abort_unless($konseling->guru_bk_id === null ||
+            (int) $konseling->guru_bk_id === (int) auth()->user()->guru?->id, 403);
         $konseling->load(['siswa.user','guruBK.user','chat.user']);
         return view('guru_bk.konseling.show', compact('konseling'));
     }
@@ -25,7 +28,14 @@ class KonselingController extends Controller
     public function update(Request $request, Konseling $konseling)
     {
         $guru = auth()->user()->guru;
-        $data = $request->only(['status','catatan_bk','jadwal_konseling','status_psikologis']);
+        abort_unless($guru && ($konseling->guru_bk_id === null
+            || (int) $konseling->guru_bk_id === (int) $guru->id), 403);
+        $data = $request->validate([
+            'status' => 'required|in:pending,disetujui,berlangsung,selesai,ditolak',
+            'catatan_bk' => 'nullable|string|max:10000',
+            'jadwal_konseling' => 'nullable|date',
+            'status_psikologis' => 'nullable|in:baik,perlu_perhatian,kritis',
+        ]);
         $data['guru_bk_id'] = $guru->id;
         $konseling->update($data);
 
@@ -44,7 +54,9 @@ class KonselingController extends Controller
 
     public function sendChat(Request $request, Konseling $konseling)
     {
-        $request->validate(['pesan' => 'required|string']);
+        abort_unless((int) $konseling->guru_bk_id === (int) auth()->user()->guru?->id, 403);
+        abort_unless(in_array($konseling->status, ['disetujui', 'berlangsung'], true), 403);
+        $request->validate(['pesan' => 'required|string|max:5000']);
         ChatKonseling::create([
             'konseling_id' => $konseling->id,
             'user_id' => auth()->id(),

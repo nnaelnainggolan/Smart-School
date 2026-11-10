@@ -62,7 +62,8 @@ class KonselingController extends Controller
 
     public function sendChat(Request $request, Konseling $konseling)
     {
-        $request->validate(['pesan' => 'required|string']);
+        $request->validate(['pesan' => 'required|string|max:5000']);
+        abort_unless(in_array($konseling->status, ['disetujui', 'berlangsung'], true), 403);
         $siswa = auth()->user()->siswa;
         abort_if($konseling->siswa_id !== $siswa->id, 403);
 

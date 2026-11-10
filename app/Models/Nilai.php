@@ -13,7 +13,7 @@ class Nilai extends Model
     public function guru() { return $this->belongsTo(Guru::class); }
 
     public function hitungNilaiAkhir() {
-        if ($this->nilai_harian && $this->nilai_uts && $this->nilai_uas) {
+        if ($this->nilai_harian !== null && $this->nilai_uts !== null && $this->nilai_uas !== null) {
             return ($this->nilai_harian * 0.4) + ($this->nilai_uts * 0.3) + ($this->nilai_uas * 0.3);
         }
         return null;

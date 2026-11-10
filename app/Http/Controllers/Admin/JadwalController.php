@@ -27,17 +27,35 @@ class JadwalController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'kelas_id' => 'required|exists:kelas,id',
-            'mata_pelajaran_id' => 'required|exists:mata_pelajaran,id',
-            'guru_id' => 'required|exists:guru,id',
-            'hari' => 'required',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required',
-            'tahun_ajaran' => 'required',
-            'semester' => 'required',
+        $data = $request->validate([
+            'kelas_id' => 'required|integer|exists:kelas,id',
+            'mata_pelajaran_id' => 'required|integer|exists:mata_pelajaran,id',
+            'guru_id' => 'required|integer|exists:guru,id',
+            'hari' => 'required|in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu',
+            'jam_mulai' => 'required|date_format:H:i',
+            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+            'tahun_ajaran' => ['required', 'regex:/^\d{4}\/\d{4}$/'],
+            'semester' => 'required|in:1,2',
+            'ruangan' => 'nullable|string|max:100',
         ]);
-        Jadwal::create($request->all());
+
+        $bentrok = Jadwal::where('hari', $data['hari'])
+            ->where('tahun_ajaran', $data['tahun_ajaran'])
+            ->where('semester', $data['semester'])
+            ->where('jam_mulai', '<', $data['jam_selesai'])
+            ->where('jam_selesai', '>', $data['jam_mulai'])
+            ->where(function ($q) use ($data) {
+                $q->where('kelas_id', $data['kelas_id'])->orWhere('guru_id', $data['guru_id']);
+                if (!empty($data['ruangan'])) $q->orWhere('ruangan', $data['ruangan']);
+            })->exists();
+
+        if ($bentrok) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'jam_mulai' => 'Jadwal bentrok dengan kelas, guru, atau ruangan lain.',
+            ]);
+        }
+
+        Jadwal::create($data);
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
     }
 
