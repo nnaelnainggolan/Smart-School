@@ -31,6 +31,7 @@
     </div>
     <form method="POST" action="{{ route('guru.nilai.store') }}">
         @csrf
+        <input type="hidden" name="kelas_id" value="{{ $kelas->id }}">
         <input type="hidden" name="mata_pelajaran_id" value="{{ $mapel->id }}">
         <input type="hidden" name="tahun_ajaran" value="{{ $request->tahun_ajaran }}">
         <input type="hidden" name="semester" value="{{ $request->semester }}">
@@ -61,7 +62,7 @@
                         <td class="px-4 py-3 text-center"><input type="number" name="nilai[{{ $s->id }}][nilai_uts]" value="{{ $n?->nilai_uts }}" min="0" max="100" step="0.01" class="w-20 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-1 focus:ring-secondary nilai-input" data-siswa="{{ $s->id }}" data-type="uts"></td>
                         <td class="px-4 py-3 text-center"><input type="number" name="nilai[{{ $s->id }}][nilai_uas]" value="{{ $n?->nilai_uas }}" min="0" max="100" step="0.01" class="w-20 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-1 focus:ring-secondary nilai-input" data-siswa="{{ $s->id }}" data-type="uas"></td>
                         <td class="px-4 py-3 text-center">
-                            <span id="akhir-{{ $s->id }}" class="font-bold text-gray-800">{{ $n?->nilai_akhir ? number_format($n->nilai_akhir,1) : '-' }}</span>
+                            <span id="akhir-{{ $s->id }}" class="font-bold text-gray-800">{{ $n?->nilai_akhir !== null ? number_format($n->nilai_akhir,1) : '-' }}</span>
                         </td>
                         <td class="px-4 py-3"><input type="text" name="nilai[{{ $s->id }}][catatan]" value="{{ $n?->catatan }}" placeholder="Opsional..." class="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-secondary"></td>
                     </tr>
@@ -86,7 +87,7 @@ document.querySelectorAll('.nilai-input').forEach(input => {
         const h = parseFloat(document.querySelector(`[data-siswa="${siswaId}"][data-type="harian"]`)?.value) || 0;
         const u = parseFloat(document.querySelector(`[data-siswa="${siswaId}"][data-type="uts"]`)?.value) || 0;
         const a = parseFloat(document.querySelector(`[data-siswa="${siswaId}"][data-type="uas"]`)?.value) || 0;
-        if (h && u && a) {
+        if ([h, u, a].every(Number.isFinite) && ['harian', 'uts', 'uas'].every(type => document.querySelector('[data-siswa="' + siswaId + '"][data-type="' + type + '"]').value !== '')) {
             const akhir = (h * 0.4) + (u * 0.3) + (a * 0.3);
             document.getElementById(`akhir-${siswaId}`).textContent = akhir.toFixed(1);
         }
