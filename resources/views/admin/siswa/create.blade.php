@@ -6,7 +6,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="px-6 py-5 border-b border-gray-100 bg-gray-50">
             <h2 class="text-lg font-bold text-gray-800">Form Pendaftaran Siswa Baru</h2>
-            <p class="text-sm text-gray-500 mt-0.5">Akun orang tua akan dibuat otomatis bersamaan dengan akun siswa</p>
+            <p class="text-sm text-gray-500 mt-0.5">Pilih akun orang tua yang sudah ada, atau buat akun baru bersama siswa.</p>
         </div>
         <form method="POST" action="{{ route('admin.siswa.store') }}" class="p-6 space-y-8">
             @csrf
@@ -88,6 +88,9 @@
                 </div>
             </div>
 
+            <div x-data="{ existing: '{{ old('orang_tua_id') }}' }">
+            <label class="block">Hubungkan akun Orang Tua<select name="orang_tua_id" x-model="existing" class="w-full border rounded p-3"><option value="">Buat akun baru</option>@foreach($parents as $parent)<option value="{{ $parent->id }}">{{ $parent->nama_ayah }} — {{ $parent->user->email }}</option>@endforeach</select></label>
+            <fieldset :disabled="!!existing" x-show="!existing" class="mt-4">
             <!-- Data Orang Tua -->
             <div class="bg-orange-50 rounded-xl p-5 border border-orange-100">
                 <h3 class="text-base font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -127,6 +130,7 @@
                 </div>
             </div>
 
+            </fieldset></div>
             <div class="flex gap-3 pt-2">
                 <button type="submit" class="px-6 py-2.5 bg-primary text-white rounded-xl font-semibold hover:bg-secondary transition text-sm">
                     Simpan Data Siswa & Orang Tua

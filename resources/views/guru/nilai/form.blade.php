@@ -31,12 +31,13 @@
     </div>
     <form method="POST" action="{{ route('guru.nilai.store') }}">
         @csrf
+        <input type="hidden" name="kelas_id" value="{{ $kelas->id }}">
         <input type="hidden" name="mata_pelajaran_id" value="{{ $mapel->id }}">
         <input type="hidden" name="tahun_ajaran" value="{{ $request->tahun_ajaran }}">
         <input type="hidden" name="semester" value="{{ $request->semester }}">
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-sm">
+                <table class="w-full text-sm grade-table">
                     <thead><tr class="bg-gray-50 border-b border-gray-100">
                         <th class="px-4 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase w-8">#</th>
                         <th class="px-4 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase">Nama Siswa</th>
@@ -57,13 +58,13 @@
                             </div>
                         </td>
                         @php $n = $nilai[$s->id] ?? null @endphp
-                        <td class="px-4 py-3 text-center"><input type="number" name="nilai[{{ $s->id }}][nilai_harian]" value="{{ $n?->nilai_harian }}" min="0" max="100" step="0.01" class="w-20 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-1 focus:ring-secondary nilai-input" data-siswa="{{ $s->id }}" data-type="harian"></td>
-                        <td class="px-4 py-3 text-center"><input type="number" name="nilai[{{ $s->id }}][nilai_uts]" value="{{ $n?->nilai_uts }}" min="0" max="100" step="0.01" class="w-20 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-1 focus:ring-secondary nilai-input" data-siswa="{{ $s->id }}" data-type="uts"></td>
-                        <td class="px-4 py-3 text-center"><input type="number" name="nilai[{{ $s->id }}][nilai_uas]" value="{{ $n?->nilai_uas }}" min="0" max="100" step="0.01" class="w-20 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-1 focus:ring-secondary nilai-input" data-siswa="{{ $s->id }}" data-type="uas"></td>
+                        <td class="px-4 py-3 text-center"><input type="number" aria-label="Harian untuk {{ $s->user->name }}" name="nilai[{{ $s->id }}][nilai_harian]" value="{{ old('nilai.'.$s->id.'.nilai_harian', $n?->nilai_harian) }}" min="0" max="100" step="0.01" class="w-20 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-1 focus:ring-secondary nilai-input" data-siswa="{{ $s->id }}" data-type="harian"></td>
+                        <td class="px-4 py-3 text-center"><input type="number" aria-label="UTS untuk {{ $s->user->name }}" name="nilai[{{ $s->id }}][nilai_uts]" value="{{ old('nilai.'.$s->id.'.nilai_uts', $n?->nilai_uts) }}" min="0" max="100" step="0.01" class="w-20 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-1 focus:ring-secondary nilai-input" data-siswa="{{ $s->id }}" data-type="uts"></td>
+                        <td class="px-4 py-3 text-center"><input type="number" aria-label="UAS untuk {{ $s->user->name }}" name="nilai[{{ $s->id }}][nilai_uas]" value="{{ old('nilai.'.$s->id.'.nilai_uas', $n?->nilai_uas) }}" min="0" max="100" step="0.01" class="w-20 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-1 focus:ring-secondary nilai-input" data-siswa="{{ $s->id }}" data-type="uas"></td>
                         <td class="px-4 py-3 text-center">
-                            <span id="akhir-{{ $s->id }}" class="font-bold text-gray-800">{{ $n?->nilai_akhir ? number_format($n->nilai_akhir,1) : '-' }}</span>
+                            <span id="akhir-{{ $s->id }}" class="font-bold text-gray-800">{{ $n?->nilai_akhir !== null ? number_format($n->nilai_akhir,1) : '-' }}</span>
                         </td>
-                        <td class="px-4 py-3"><input type="text" name="nilai[{{ $s->id }}][catatan]" value="{{ $n?->catatan }}" placeholder="Opsional..." class="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-secondary"></td>
+                        <td class="px-4 py-3"><input type="text" name="nilai[{{ $s->id }}][catatan]" value="{{ old('nilai.'.$s->id.'.catatan', $n?->catatan) }}" placeholder="Opsional..." class="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-secondary"></td>
                     </tr>
                     @empty
                     <tr><td colspan="7" class="px-5 py-10 text-center text-gray-400">Tidak ada siswa di kelas ini</td></tr>

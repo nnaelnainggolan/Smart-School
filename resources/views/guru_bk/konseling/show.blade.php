@@ -71,7 +71,7 @@
                     <textarea name="catatan_bk" rows="3" placeholder="Catatan untuk siswa..." class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary">{{ $konseling->catatan_bk }}</textarea>
                 </div>
                 <button type="submit" class="px-5 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-secondary transition">Simpan Perubahan</button>
-            </form>
+            <label class="block mt-3">Ringkasan untuk Orang Tua (terpisah dari catatan internal)<textarea name="ringkasan_ortu" maxlength="2000" class="block border rounded p-2 w-full">{{ old('ringkasan_ortu',$konseling->ringkasan_ortu) }}</textarea></label></form>
         </div>
     </div>
     @endif

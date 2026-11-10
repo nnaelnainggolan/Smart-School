@@ -26,7 +26,7 @@
 @endsection
 
 @section('content')
-<div class="dashboard-page space-y-6">
+<div class="dashboard-page role-dashboard space-y-6">
 
     <!-- Welcome Banner -->
     <div class="dashboard-welcome bg-gradient-to-r from-primary via-primary to-secondary rounded-2xl p-6 text-white relative overflow-hidden">
@@ -69,6 +69,8 @@
             </div>
         </div>
     </div>
+
+    @include('dashboard.insights')
 
     <!-- Jadwal & Aksi Cepat -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">

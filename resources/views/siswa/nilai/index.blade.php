@@ -32,8 +32,7 @@
         <h2 class="text-xl font-bold text-gray-800">Nilai & Rapor Digital</h2>
         <form class="flex gap-2">
             <select name="tahun_ajaran" class="px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary">
-                <option value="2024/2025" {{ $tahunAjaran == '2024/2025' ? 'selected' : '' }}>2024/2025</option>
-                <option value="2025/2026" {{ $tahunAjaran == '2025/2026' ? 'selected' : '' }}>2025/2026</option>
+                @foreach(\App\Services\SchoolContext::years() as $year)<option value="{{ $year }}" @selected($tahunAjaran === $year)>{{ $year }}</option>@endforeach
             </select>
             <select name="semester" class="px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-secondary">
                 <option value="1" {{ $semester == '1' ? 'selected' : '' }}>Semester 1</option>
@@ -75,7 +74,7 @@
                     <td class="px-5 py-3.5 text-center text-gray-600">{{ $n->nilai_uts ?? '-' }}</td>
                     <td class="px-5 py-3.5 text-center text-gray-600">{{ $n->nilai_uas ?? '-' }}</td>
                     <td class="px-5 py-3.5 text-center font-bold {{ $n->nilai_akhir >= $n->mataPelajaran->kkm ? 'text-green-600' : 'text-red-500' }}">
-                        {{ $n->nilai_akhir ? number_format($n->nilai_akhir,1) : '-' }}
+                        {{ $n->nilai_akhir !== null ? number_format($n->nilai_akhir,1) : '-' }}
                     </td>
                     <td class="px-5 py-3.5 text-center">
                         <span class="px-2 py-0.5 rounded-full text-xs font-bold {{ $n->predikat === 'A' ? 'bg-green-100 text-green-700' : ($n->predikat === 'B' ? 'bg-blue-100 text-blue-700' : ($n->predikat === 'C' ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700')) }}">
