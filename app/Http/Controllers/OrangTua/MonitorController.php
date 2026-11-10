@@ -9,7 +9,9 @@ class MonitorController extends Controller
 {
     private function getSiswa()
     {
-        return auth()->user()->orangTua->siswa()->with(['user','kelas'])->first();
+        $orangTua = auth()->user()->orangTua;
+        abort_unless($orangTua, 403);
+        return $orangTua->siswa()->with(['user','kelas'])->firstOrFail();
     }
 
     public function nilai(Request $request)
@@ -49,8 +51,13 @@ class MonitorController extends Controller
     {
         $user = auth()->user();
         if ($request->isMethod('post')) {
-            $request->validate(['pesan' => 'required', 'penerima_id' => 'required|exists:users,id']);
+            $request->validate(['pesan' => 'required|string|max:5000', 'penerima_id' => 'required|integer|exists:users,id']);
             $siswa = $this->getSiswa();
+            $penerima = User::whereKey($request->penerima_id)
+                ->whereIn('role', ['guru', 'guru_bk'])->firstOrFail();
+            $diizinkan = \App\Models\Jadwal::where('guru_id', $penerima->guru?->id)
+                ->where('kelas_id', $siswa->kelas_id)->exists();
+            abort_unless($diizinkan || $penerima->role === 'guru_bk', 403);
             PesanGuruOrtu::create([
                 'pengirim_id' => $user->id,
                 'penerima_id' => $request->penerima_id,
