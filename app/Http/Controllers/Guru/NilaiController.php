@@ -17,53 +17,97 @@ class NilaiController extends Controller
 
     public function form(Request $request)
     {
-        $guru = auth()->user()->guru;
-        $request->validate([
-            'kelas_id' => 'required|exists:kelas,id',
-            'mata_pelajaran_id' => 'required|exists:mata_pelajaran,id',
-            'tahun_ajaran' => 'required',
-            'semester' => 'required',
+        $data = $request->validate([
+            'kelas_id' => 'required|integer|exists:kelas,id',
+            'mata_pelajaran_id' => 'required|integer|exists:mata_pelajaran,id',
+            'tahun_ajaran' => ['required', 'regex:/^\d{4}\/\d{4}$/'],
+            'semester' => 'required|in:1,2',
         ]);
 
-        $siswa = Siswa::with('user')->where('kelas_id', $request->kelas_id)->where('status','aktif')->get();
-        $mapel = MataPelajaran::find($request->mata_pelajaran_id);
-        $kelas = Kelas::find($request->kelas_id);
+        $guru = auth()->user()->guru;
+        abort_unless($guru, 403);
+        abort_unless(Jadwal::where('guru_id', $guru->id)
+            ->where('kelas_id', $data['kelas_id'])
+            ->where('mata_pelajaran_id', $data['mata_pelajaran_id'])
+            ->where('tahun_ajaran', $data['tahun_ajaran'])
+            ->where('semester', $data['semester'])->exists(), 403);
+
+        $siswa = Siswa::with('user')
+            ->where('kelas_id', $data['kelas_id'])->where('status', 'aktif')->get();
+        $mapel = MataPelajaran::findOrFail($data['mata_pelajaran_id']);
+        $kelas = Kelas::findOrFail($data['kelas_id']);
 
         $nilai = Nilai::where('guru_id', $guru->id)
-            ->where('mata_pelajaran_id', $request->mata_pelajaran_id)
-            ->where('tahun_ajaran', $request->tahun_ajaran)
-            ->where('semester', $request->semester)
+            ->where('mata_pelajaran_id', $data['mata_pelajaran_id'])
+            ->where('tahun_ajaran', $data['tahun_ajaran'])
+            ->where('semester', $data['semester'])
+            ->whereIn('siswa_id', $siswa->pluck('id'))
             ->get()->keyBy('siswa_id');
 
-        return view('guru.nilai.form', compact('siswa','mapel','kelas','nilai','request'));
+        return view('guru.nilai.form', compact('siswa', 'mapel', 'kelas', 'nilai', 'request'));
     }
 
     public function store(Request $request)
     {
+        $data = $request->validate([
+            'kelas_id' => 'required|integer|exists:kelas,id',
+            'mata_pelajaran_id' => 'required|integer|exists:mata_pelajaran,id',
+            'tahun_ajaran' => ['required', 'regex:/^\d{4}\/\d{4}$/'],
+            'semester' => 'required|in:1,2',
+            'nilai' => 'required|array|min:1',
+            'nilai.*.nilai_harian' => 'nullable|numeric|between:0,100',
+            'nilai.*.nilai_uts' => 'nullable|numeric|between:0,100',
+            'nilai.*.nilai_uas' => 'nullable|numeric|between:0,100',
+            'nilai.*.catatan' => 'nullable|string|max:1000',
+        ]);
+
         $guru = auth()->user()->guru;
-        foreach ($request->nilai as $siswa_id => $data) {
-            $nilaiAkhir = null;
-            if (!empty($data['nilai_harian']) && !empty($data['nilai_uts']) && !empty($data['nilai_uas'])) {
-                $nilaiAkhir = ($data['nilai_harian'] * 0.4) + ($data['nilai_uts'] * 0.3) + ($data['nilai_uas'] * 0.3);
-            }
-            Nilai::updateOrCreate(
-                [
-                    'siswa_id' => $siswa_id,
-                    'mata_pelajaran_id' => $request->mata_pelajaran_id,
-                    'tahun_ajaran' => $request->tahun_ajaran,
-                    'semester' => $request->semester,
-                ],
-                [
-                    'guru_id' => $guru->id,
-                    'nilai_harian' => $data['nilai_harian'] ?? null,
-                    'nilai_uts' => $data['nilai_uts'] ?? null,
-                    'nilai_uas' => $data['nilai_uas'] ?? null,
-                    'nilai_akhir' => $nilaiAkhir,
-                    'predikat' => $nilaiAkhir ? \App\Models\Nilai::hitungPredikat($nilaiAkhir) : null,
-                    'catatan' => $data['catatan'] ?? null,
-                ]
-            );
+        abort_unless($guru, 403);
+        abort_unless(Jadwal::where('guru_id', $guru->id)
+            ->where('kelas_id', $data['kelas_id'])
+            ->where('mata_pelajaran_id', $data['mata_pelajaran_id'])
+            ->where('tahun_ajaran', $data['tahun_ajaran'])
+            ->where('semester', $data['semester'])->exists(), 403);
+
+        $ids = array_keys($data['nilai']);
+        $validCount = Siswa::where('kelas_id', $data['kelas_id'])
+            ->where('status', 'aktif')->whereIn('id', $ids)->count();
+        if ($validCount !== count($ids)) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'nilai' => 'Daftar siswa tidak sesuai dengan kelas yang Anda ajar.',
+            ]);
         }
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($data, $guru) {
+            foreach ($data['nilai'] as $siswaId => $item) {
+                $h = $item['nilai_harian'] ?? null;
+                $u = $item['nilai_uts'] ?? null;
+                $a = $item['nilai_uas'] ?? null;
+                $akhir = ($h !== null && $u !== null && $a !== null)
+                    ? round(($h * 0.4) + ($u * 0.3) + ($a * 0.3), 2)
+                    : null;
+
+                Nilai::updateOrCreate(
+                    [
+                        'siswa_id' => $siswaId,
+                        'mata_pelajaran_id' => $data['mata_pelajaran_id'],
+                        'tahun_ajaran' => $data['tahun_ajaran'],
+                        'semester' => $data['semester'],
+                    ],
+                    [
+                        'guru_id' => $guru->id,
+                        'nilai_harian' => $h,
+                        'nilai_uts' => $u,
+                        'nilai_uas' => $a,
+                        'nilai_akhir' => $akhir,
+                        'predikat' => $akhir !== null ? Nilai::hitungPredikat($akhir) : null,
+                        'catatan' => $item['catatan'] ?? null,
+                    ]
+                );
+            }
+        });
+
         return redirect()->route('guru.nilai.index')->with('success', 'Nilai berhasil disimpan.');
     }
+
 }
