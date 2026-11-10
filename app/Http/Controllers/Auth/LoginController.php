@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -22,18 +24,26 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
+        $key = 'login:'.strtolower($credentials['email']).'|'.$request->ip();
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            throw ValidationException::withMessages(['email' => 'Terlalu banyak percobaan login. Coba lagi beberapa saat.']);
+        }
+
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
             $user = Auth::user();
 
             if (!$user->is_active) {
                 Auth::logout();
+                RateLimiter::hit($key, 60);
                 return back()->withErrors(['email' => 'Akun Anda tidak aktif.']);
             }
 
+            RateLimiter::clear($key);
             return $this->redirectByRole($user->role);
         }
 
+        RateLimiter::hit($key, 60);
         return back()->withErrors(['email' => 'Email atau password salah.'])->onlyInput('email');
     }
 
