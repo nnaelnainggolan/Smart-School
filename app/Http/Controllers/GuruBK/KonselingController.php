@@ -10,7 +10,8 @@ class KonselingController extends Controller
     public function index(Request $request)
     {
         $guru = auth()->user()->guru;
-        $query = Konseling::with(['siswa.user']);
+        $query = Konseling::with(['siswa.user'])
+            ->where(fn ($q) => $q->whereNull('guru_bk_id')->orWhere('guru_bk_id', $guru->id));
         if ($request->status) $query->where('status', $request->status);
         $konseling = $query->latest()->paginate(15);
         return view('guru_bk.konseling.index', compact('konseling'));
@@ -18,6 +19,8 @@ class KonselingController extends Controller
 
     public function show(Konseling $konseling)
     {
+        abort_unless($konseling->guru_bk_id === null ||
+            (int) $konseling->guru_bk_id === (int) auth()->user()->guru?->id, 403);
         $konseling->load(['siswa.user','guruBK.user','chat.user']);
         return view('guru_bk.konseling.show', compact('konseling'));
     }
