@@ -62,9 +62,9 @@
                     <td>{{ $n->nilai_harian ?? '-' }}</td>
                     <td>{{ $n->nilai_uts ?? '-' }}</td>
                     <td>{{ $n->nilai_uas ?? '-' }}</td>
-                    <td><strong>{{ $n->nilai_akhir ? number_format($n->nilai_akhir,1) : '-' }}</strong></td>
+                    <td><strong>{{ $n->nilai_akhir !== null ? number_format($n->nilai_akhir,1) : '-' }}</strong></td>
                     <td>{{ $n->predikat ?? '-' }}</td>
-                    <td>{{ $n->nilai_akhir >= $n->mataPelajaran->kkm ? 'Tuntas' : 'Remidial' }}</td>
+                    <td>{{ $n->nilai_akhir === null ? '-' : ($n->nilai_akhir >= $n->mataPelajaran->kkm ? 'Tuntas' : 'Remedial') }}</td>
                 </tr>
                 @empty
                 <tr><td colspan="8">Belum ada nilai untuk semester ini</td></tr>
