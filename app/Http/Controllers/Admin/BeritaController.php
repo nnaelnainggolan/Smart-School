@@ -25,11 +25,12 @@ class BeritaController extends Controller
             'judul' => 'required|string|max:255',
             'konten' => 'required',
             'kategori' => 'required|in:berita,pengumuman,prestasi,kegiatan',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
         ]);
 
-        $data = $request->all();
+        $data = $request->only(['judul', 'konten', 'kategori']);
         $data['user_id'] = auth()->id();
-        $data['slug'] = Str::slug($request->judul) . '-' . time();
+        $data['slug'] = Str::slug($request->judul) . '-' . Str::lower(Str::random(8));
         $data['is_published'] = $request->boolean('is_published');
         $data['published_at'] = $data['is_published'] ? now() : null;
 
@@ -48,7 +49,13 @@ class BeritaController extends Controller
 
     public function update(Request $request, Berita $berita)
     {
-        $data = $request->except('_token','_method');
+        $data = $request->validate([
+            'judul' => 'required|string|max:255',
+            'konten' => 'required|string',
+            'kategori' => 'required|in:berita,pengumuman,prestasi,kegiatan',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+        unset($data['gambar']);
         $data['is_published'] = $request->boolean('is_published');
         $data['published_at'] = $data['is_published'] ? ($berita->published_at ?? now()) : null;
         if ($request->hasFile('gambar')) {
@@ -60,7 +67,9 @@ class BeritaController extends Controller
 
     public function destroy(Berita $berita)
     {
+        $path = $berita->gambar;
         $berita->delete();
+        if ($path) \Illuminate\Support\Facades\Storage::disk('public')->delete($path);
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus.');
     }
 }
