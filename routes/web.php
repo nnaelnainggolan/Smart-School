@@ -32,14 +32,14 @@ Route::middleware(['auth'])->group(function () {
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->name('dashboard');
 
-    Route::resource('siswa', Admin\SiswaController::class);
-    Route::resource('guru', Admin\GuruController::class);
-    Route::resource('orangtua', Admin\OrangTuaController::class);
+    Route::resource('siswa', Admin\SiswaController::class)->except('show');
+    Route::resource('guru', Admin\GuruController::class)->except('show');
+    Route::resource('orangtua', Admin\OrangTuaController::class)->except('show');
     Route::put('/orangtua/{orangtua}/reset-password', [Admin\OrangTuaController::class, 'resetPassword'])->name('orangtua.reset_password');
-    Route::resource('kelas', Admin\KelasController::class)->parameters(['kelas' => 'kelas']);
+    Route::resource('kelas', Admin\KelasController::class)->parameters(['kelas' => 'kelas'])->except('show');
     Route::resource('jadwal', Admin\JadwalController::class)->except(['show', 'edit', 'update']);
-    Route::resource('mapel', Admin\MataPelajaranController::class);
-    Route::resource('berita', Admin\BeritaController::class)->parameters(['berita' => 'berita']);
+    Route::resource('mapel', Admin\MataPelajaranController::class)->except('show');
+    Route::resource('berita', Admin\BeritaController::class)->parameters(['berita' => 'berita'])->except('show');
     Route::resource('kalender', Admin\KalenderController::class)->except(['show', 'edit', 'update']);
 
     Route::get('/laporan', [Admin\LaporanController::class, 'index'])->name('laporan.index');

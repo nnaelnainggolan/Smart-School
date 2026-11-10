@@ -22,8 +22,9 @@ class MateriController extends Controller
 
     public function create()
     {
-        $mapel = MataPelajaran::all();
-        $kelas = Kelas::all();
+        $assignments = auth()->user()->guru->jadwal()->get();
+        $mapel = MataPelajaran::whereIn('id', $assignments->pluck('mata_pelajaran_id'))->get();
+        $kelas = Kelas::whereIn('id', $assignments->pluck('kelas_id'))->get();
 
         return view('guru.materi.create', compact('mapel', 'kelas'));
     }
