@@ -88,4 +88,42 @@ class SecurityValidationTest extends TestCase
             ->delete(route('guru.materi.destroy', $materi))
             ->assertForbidden();
     }
+    public function test_out_of_range_grade_is_rejected(): void
+    {
+        $teacher = User::where('email', 'guru@smartschool.id')->firstOrFail();
+        $schedule = Jadwal::firstOrFail();
+        $student = Siswa::firstOrFail();
+
+        $this->actingAs($teacher)->post(route('guru.nilai.store'), [
+            'kelas_id' => $schedule->kelas_id,
+            'mata_pelajaran_id' => $schedule->mata_pelajaran_id,
+            'tahun_ajaran' => $schedule->tahun_ajaran,
+            'semester' => $schedule->semester,
+            'nilai' => [$student->id => [
+                'nilai_harian' => 101,
+                'nilai_uts' => 80,
+                'nilai_uas' => 80,
+            ]],
+        ])->assertSessionHasErrors('nilai.'.$student->id.'.nilai_harian');
+    }
+
+    public function test_teacher_cannot_enter_grades_for_another_teachers_class(): void
+    {
+        $teacher = User::where('email', 'dewi@smartschool.id')->firstOrFail();
+        $schedule = Jadwal::firstOrFail();
+        $student = Siswa::firstOrFail();
+
+        $this->actingAs($teacher)->post(route('guru.nilai.store'), [
+            'kelas_id' => $schedule->kelas_id,
+            'mata_pelajaran_id' => $schedule->mata_pelajaran_id,
+            'tahun_ajaran' => $schedule->tahun_ajaran,
+            'semester' => $schedule->semester,
+            'nilai' => [$student->id => [
+                'nilai_harian' => 70,
+                'nilai_uts' => 70,
+                'nilai_uas' => 70,
+            ]],
+        ])->assertForbidden();
+    }
+
 }
