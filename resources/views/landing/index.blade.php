@@ -1,5 +1,7 @@
 {{--
-PANDUAN GAMBAR: simpan foto di public/images/landing/ dengan nama berikut.
+PANDUAN GAMBAR: slot menggunakan kolase school-showcase.png melalui komponen school-photo.
+Koordinat foto diatur di resources/views/components/school-photo.blade.php tanpa mengubah gambar sumber.
+Untuk mengganti satu slot, simpan foto di public/images/landing/ dengan nama berikut.
 Beranda tetap menggunakan public/images/siswa.png (PNG transparan, disarankan 900 x 1000).
 Tentang: tentang-sekolah.jpg (gedung/lingkungan sekolah, 1200 x 900).
 Program: program-ipa.jpg, program-ips.jpg, program-bahasa-tik.jpg (praktikum sains, diskusi sosial, pembelajaran bahasa/komputer; 1200 x 600).
@@ -13,7 +15,8 @@ Kontak: kontak-gerbang.jpg (gerbang dan akses masuk, 1200 x 400).
 Testimoni: testimoni-1.jpg, testimoni-2.jpg, testimoni-3.jpg (potret narasumber sesuai identitas; 300 x 300).
 Gunakan foto asli sekolah. Foto landscape akan terpotong proporsional (object-fit: cover).
 Atur object-position pada .slot-photo jika posisi subjek perlu disesuaikan.
-Jika foto belum tersedia, ikon/placeholder tetap tampil. Hindari teks penting di tepi foto.
+Jika foto terpisah belum tersedia atau gagal dimuat, bagian kolase yang sesuai tetap tampil.
+Hindari teks penting di tepi foto.
 --}}
 <!DOCTYPE html>
 <html lang="id">
@@ -259,7 +262,7 @@ html{scroll-padding-top:var(--nav-height)}
             <!-- Left: Image placeholder + stats -->
             <div class="relative">
                 <div class="about-photo bg-gradient-to-br from-primary to-secondary rounded-3xl overflow-hidden aspect-[4/3] flex items-center justify-center shadow-2xl">
-                    <img class="slot-photo" src="{{ asset('images/landing/tentang-sekolah.jpg') }}" alt="Gedung dan lingkungan sekolah" loading="lazy" decoding="async" onerror="this.style.display='none'">
+                    <x-school-photo name="tentang-sekolah.jpg" alt="Gedung dan lingkungan sekolah" />
                     <!-- Identitas sekolah tetap tersedia sebagai keterangan foto -->
                     <div class="text-center text-white p-8">
                         <div class="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center mx-auto mb-4">
@@ -345,7 +348,7 @@ html{scroll-padding-top:var(--nav-height)}
             ] as $p)
             <div class="card-hover bg-white rounded-3xl overflow-hidden shadow-md border border-gray-100">
                 <div class="h-36 bg-gradient-to-br {{ $p['color'] }} flex items-center justify-center relative">
-                    <i class="fa-solid {{ $p['icon'] }} text-6xl text-white/80"></i><img class="slot-photo" src="{{ asset('images/landing/' . $p['image']) }}" alt="{{ $p['title'] }}" loading="lazy" decoding="async" onerror="this.style.display='none'">
+                    <i class="fa-solid {{ $p['icon'] }} text-6xl text-white/80"></i><x-school-photo :name="$p['image']" :alt="$p['title']" />
                     @if($p['badge'])
                     <span class="absolute top-4 right-4 bg-accent text-white text-xs font-bold px-2.5 py-1 rounded-full">{{ $p['badge'] }}</span>
                     @endif
@@ -385,7 +388,7 @@ html{scroll-padding-top:var(--nav-height)}
             ] as $f)
             <div class="card-hover p-5 rounded-2xl border border-gray-100 text-center bg-white shadow-sm">
                 <div class="facility-photo w-14 h-14 {{ $f['color'] }} rounded-2xl flex items-center justify-center mx-auto mb-3">
-                    <i class="fa-solid {{ $f['icon'] }} text-2xl"></i><img class="slot-photo" src="{{ asset('images/landing/' . $f['image']) }}" alt="{{ $f['title'] }}" loading="lazy" decoding="async" onerror="this.style.display='none'">
+                    <i class="fa-solid {{ $f['icon'] }} text-2xl"></i><x-school-photo :name="$f['image']" :alt="$f['title']" />
                 </div>
                 <h4 class="font-bold text-gray-800 text-sm mb-1">{{ $f['title'] }}</h4>
                 <p class="text-xs text-gray-500">{{ $f['desc'] }}</p>
@@ -404,7 +407,7 @@ html{scroll-padding-top:var(--nav-height)}
                     <div class="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
                     <span class="text-sm font-semibold text-blue-100">Penerimaan Peserta Didik Baru</span>
                 </div>
-<div class="photo-slot admission-photo"><span class="slot-label"><i class="fa-regular fa-image" aria-hidden="true"></i> Kegiatan siswa atau penyambutan peserta didik</span><img class="slot-photo" src="{{ asset('images/landing/ppdb-siswa.jpg') }}" alt="Kegiatan siswa atau penyambutan peserta didik" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+<div class="photo-slot admission-photo"><x-school-photo name="ppdb-siswa.jpg" alt="Pendaftaran peserta didik baru" /></div>
                 <h2 class="text-4xl font-black leading-tight mb-4">
                     PPDB Tahun Ajaran<br><span class="text-accent">2025/2026</span> Telah Dibuka!
                 </h2>
@@ -458,7 +461,7 @@ html{scroll-padding-top:var(--nav-height)}
             <div class="card-hover bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm">
                 <div class="news-photo h-44 bg-gradient-to-br from-primary/80 to-secondary flex items-center justify-center">
                     <div class="text-center text-white"><i class="fa-solid fa-newspaper text-4xl" aria-hidden="true"></i><p class="text-xs mt-2">{{ $b->kategori }}</p></div>
-<img class="slot-photo" src="{{ $b->gambar ? Storage::url($b->gambar) : asset('images/landing/berita-default.jpg') }}" alt="{{ $b->judul }}" loading="lazy" decoding="async" onerror="this.style.display='none'">
+<x-school-photo :name="in_array($b->kategori, ['pengumuman', 'prestasi', 'kegiatan']) ? 'berita-' . $b->kategori . '.jpg' : 'berita-default.jpg'" :alt="$b->judul" :uploaded="$b->gambar ? Storage::url($b->gambar) : null" />
                 </div>
                 <div class="p-5">
                     <span class="inline-block px-2.5 py-1 bg-secondary/10 text-secondary text-xs font-bold rounded-full mb-3 capitalize">{{ $b->kategori }}</span>
@@ -479,7 +482,7 @@ html{scroll-padding-top:var(--nav-height)}
             <div class="card-hover bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm">
                 <div class="news-photo h-44 bg-gradient-to-br from-primary/80 to-secondary flex items-center justify-center">
                     <div class="text-center text-white">
-                        <img class="slot-photo" src="{{ asset('images/landing/berita-' . $bn['kat'] . '.jpg') }}" alt="{{ $bn['judul'] }}" loading="lazy" decoding="async" onerror="this.style.display='none'"><i class="fa-solid {{ $bn['icon'] }} text-5xl opacity-60 mb-2 block"></i>
+                        <x-school-photo :name="'berita-' . $bn['kat'] . '.jpg'" :alt="$bn['judul']" /><i class="fa-solid {{ $bn['icon'] }} text-5xl opacity-60 mb-2 block"></i>
                         <span class="text-xs uppercase font-bold tracking-wider opacity-70">{{ $bn['kat'] }}</span>
                     </div>
                 </div>
@@ -517,7 +520,7 @@ html{scroll-padding-top:var(--nav-height)}
                 </div>
                 <p class="text-gray-600 leading-relaxed mb-5 text-sm">"{{ $t['msg'] }}"</p>
                 <div class="flex items-center gap-3">
-                    <div class="avatar-photo w-10 h-10 {{ $t['color'] }} rounded-xl flex items-center justify-center text-white font-bold">{{ $t['avatar'] }}<img class="slot-photo" src="{{ asset('images/landing/testimoni-' . $loop->iteration . '.jpg') }}" alt="{{ $t['nama'] }}" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+                    <div class="avatar-photo w-10 h-10 {{ $t['color'] }} rounded-xl flex items-center justify-center text-white font-bold">{{ $t['avatar'] }}<x-school-photo :name="'testimoni-' . $loop->iteration . '.jpg'" :alt="'Ilustrasi ' . $t['role']" /></div>
                     <div>
                         <p class="font-bold text-gray-800 text-sm">{{ $t['nama'] }}</p>
                         <p class="text-xs text-gray-400">{{ $t['role'] }}</p>
@@ -605,7 +608,7 @@ html{scroll-padding-top:var(--nav-height)}
                     <i class="fa-solid fa-map text-white"></i>
                     <span class="text-white font-semibold text-sm">Lokasi SMA Smart School</span>
                 </div>
-<div class="photo-slot contact-photo"><span class="slot-label"><i class="fa-regular fa-image" aria-hidden="true"></i> Gerbang sekolah dan akses masuk</span><img class="slot-photo" src="{{ asset('images/landing/kontak-gerbang.jpg') }}" alt="Gerbang sekolah dan akses masuk" loading="lazy" decoding="async" onerror="this.style.display='none'"></div>
+<div class="photo-slot contact-photo"><x-school-photo name="kontak-gerbang.jpg" alt="Gerbang sekolah dan akses masuk" /></div>
                 <!-- Google Maps Embed (placeholder - ganti src dengan link embed maps asli) -->
                 <iframe title="Peta lokasi sekolah"
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3981.913763278765!2d98.67638!3d3.58333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zM8KwMzUnMDAuMCJOIDk4wrAwNCcwMC4wIkU!5e0!3m2!1sid!2sid!4v1234567890"

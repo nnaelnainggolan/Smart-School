@@ -8,6 +8,7 @@ use App\Models\Berita;
 use App\Models\Jadwal;
 use App\Models\Materi;
 use App\Models\Nilai;
+use App\Services\DashboardInsights;
 use App\Services\SchoolContext;
 
 class DashboardController extends Controller
@@ -28,7 +29,7 @@ class DashboardController extends Controller
             ->orderBy('jam_mulai')->get();
 
         $nilaiTerbaru = Nilai::with('mataPelajaran')
-            ->where('siswa_id', $siswa->id)->latest()->take(5)->get();
+            ->where('siswa_id', $siswa->id)->where(SchoolContext::period())->get();
 
         $totalAbsensiAlpha = Absensi::where('siswa_id', $siswa->id)
             ->where('status', 'Alpha')->count();
@@ -39,6 +40,8 @@ class DashboardController extends Controller
 
         $berita = Berita::where('is_published', true)->latest('published_at')->take(3)->get();
 
-        return view('siswa.dashboard', compact('siswa', 'jadwalHariIni', 'nilaiTerbaru', 'totalAbsensiAlpha', 'materiTerbaru', 'berita'));
+        $insights = app(DashboardInsights::class)->forUser(auth()->user());
+
+        return view('siswa.dashboard', compact('insights', 'siswa', 'jadwalHariIni', 'nilaiTerbaru', 'totalAbsensiAlpha', 'materiTerbaru', 'berita'));
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Absensi;
 use App\Models\Konseling;
 use App\Models\Nilai;
 use App\Models\PesanGuruOrtu;
+use App\Services\DashboardInsights;
 use App\Services\SchoolContext;
 
 class DashboardController extends Controller
@@ -24,7 +25,7 @@ class DashboardController extends Controller
         }
 
         $nilaiTerbaru = Nilai::with('mataPelajaran')
-            ->where('siswa_id', $siswa->id)->latest()->take(6)->get();
+            ->where('siswa_id', $siswa->id)->where(SchoolContext::period())->get();
 
         $rekapAbsensi = Absensi::where('siswa_id', $siswa->id)
             ->whereMonth('tanggal', now()->month)->whereYear('tanggal', now()->year)
@@ -36,6 +37,8 @@ class DashboardController extends Controller
 
         $pesanBaru = PesanGuruOrtu::where('penerima_id', auth()->id())->where('dibaca', false)->count();
 
-        return view('orang_tua.dashboard', compact('siswa', 'nilaiTerbaru', 'rekapAbsensi', 'konselingAktif', 'pesanBaru'));
+        $insights = app(DashboardInsights::class)->forUser(auth()->user(), $siswa);
+
+        return view('orang_tua.dashboard', compact('insights', 'siswa', 'nilaiTerbaru', 'rekapAbsensi', 'konselingAktif', 'pesanBaru'));
     }
 }

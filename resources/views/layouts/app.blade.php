@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Dashboard') — Smart School</title>
+    <title>@yield('title', 'Dashboard') — SMK Hasanuddin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -26,7 +26,8 @@
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v=20261007">
     <script src="{{ asset('js/dashboard.js') }}?v=20261007"></script>
     @stack('styles')
-<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#173f35"></head>
+<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#173f35"><link rel="stylesheet" href="{{ asset('css/dashboard-insights.css') }}?v=1">
+</head>
 <body class="school-app" x-data="schoolDashboard()" @keydown.escape.window="closeSidebar()">
 <a href="#dashboard-content" class="school-skip">Lewati ke konten utama</a>
 <div class="school-shell">
@@ -35,7 +36,7 @@
     <!-- ===== SIDEBAR ===== -->
     <aside id="school-sidebar" x-ref="sidebar" :class="{ 'is-collapsed': !sidebarOpen }"
            :inert="!desktop && !sidebarOpen" :role="!desktop && sidebarOpen ? 'dialog' : null"
-           :aria-modal="!desktop && sidebarOpen ? 'true' : null" aria-label="Menu Smart School"
+           :aria-modal="!desktop && sidebarOpen ? 'true' : null" aria-label="Menu SMK Hasanuddin"
            @keydown="trapSidebar($event)" class="school-sidebar">
         <button type="button" class="lg:hidden self-end m-3 text-white p-2 rounded-lg hover:bg-white/10"
                 @click="closeSidebar()" aria-label="Tutup menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
@@ -46,7 +47,7 @@
                 <i class="fa-solid fa-graduation-cap text-white text-sm"></i>
             </div>
             <div x-show="sidebarOpen" x-transition>
-                <p class="text-white font-bold text-base leading-tight">Smart School</p>
+                <p class="text-white font-bold text-base leading-tight">SMK Hasanuddin</p>
                 <p class="text-blue-300 text-xs">Sistem Informasi</p>
             </div>
         </div>

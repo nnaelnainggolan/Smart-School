@@ -26,7 +26,7 @@
 @endsection
 
 @section('content')
-<div class="dashboard-page space-y-6">
+<div class="dashboard-page role-dashboard space-y-6">
     @if(!isset($siswa) || !$siswa)
     <div class="bg-yellow-50 border border-yellow-200 rounded-2xl p-6 flex items-center gap-4">
         <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-2xl"></i>
@@ -102,16 +102,7 @@
     </div>
     @endif
 
-    <!-- Grafik Nilai -->
-    @if($nilaiTerbaru->count())
-    <div class="dashboard-panel">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-gray-800">Grafik Nilai Anak</h3>
-            <a href="{{ route('orang_tua.nilai') }}" class="text-xs text-secondary font-semibold hover:underline">Detail Rapor →</a>
-        </div>
-        <div class="dashboard-chart-bar"><canvas id="nilaiChart" role="img" aria-label="Grafik nilai akhir anak per mata pelajaran">Grafik nilai anak. Detail nilai tersedia pada halaman rapor.</canvas></div>
-    </div>
-    @endif
+    @include('dashboard.insights')
 
     <!-- Quick Menu -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -132,31 +123,4 @@
     @endif
 </div>
 
-@push('scripts')
-@if(isset($nilaiTerbaru) && $nilaiTerbaru->count())
-<script>
-new Chart(document.getElementById('nilaiChart').getContext('2d'), {
-    type: 'bar',
-    data: {
-        labels: {!! json_encode($nilaiTerbaru->pluck('mataPelajaran.nama_mapel')) !!},
-        datasets: [{
-            label: 'Nilai Akhir',
-            data: {!! json_encode($nilaiTerbaru->pluck('nilai_akhir')) !!},
-            backgroundColor: {!! json_encode($nilaiTerbaru->map(fn($n) => $n->nilai_akhir >= $n->mataPelajaran->kkm ? 'rgba(82,115,72,0.85)' : 'rgba(239,68,68,0.75)')->toArray()) !!},
-            borderRadius: 8, borderWidth: 0
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: { beginAtZero: true, max: 100, grid: { color: '#f1f5f9' }, ticks: { font: { size: 11 } } },
-            x: { grid: { display: false }, ticks: { font: { size: 11 } } }
-        },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ' Nilai: ' + ctx.raw } } }
-    }
-});
-</script>
-@endif
-@endpush
 @endsection

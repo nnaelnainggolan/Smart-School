@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('title', 'Dashboard Admin')
-@section('subtitle', 'Pusat pengelolaan Smart School')
+@section('subtitle', 'Pusat pengelolaan SMK Hasanuddin')
 @section('sidebar') @include('admin.partials.sidebar') @endsection
 
 @section('content')
-<div class="dashboard-page">
+<div class="dashboard-page role-dashboard">
     <section class="dashboard-welcome dashboard-greeting" aria-label="Selamat datang">
         <div class="dashboard-greeting-copy">
             <p class="dashboard-eyebrow">Ruang kerja administrator</p>
@@ -37,17 +37,18 @@
         @endforeach
     </section>
 
+    @include('dashboard.insights')
     <div class="admin-overview">
         <section class="dashboard-panel" aria-labelledby="attendance-title">
             <div class="dashboard-panel-header">
-                <div><h3 id="attendance-title" class="font-bold">Kehadiran hari ini</h3><p>{{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }}</p></div>
+                <div><h3 id="attendance-title" class="font-bold">Rekaman absensi hari ini</h3><p>{{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }}</p></div>
                 <span class="dashboard-stat-icon" aria-hidden="true"><i class="fa-solid fa-clipboard-check"></i></span>
             </div>
             @if($absensi_hari_ini->isEmpty())
             <div class="dashboard-empty"><i class="fa-regular fa-clipboard" aria-hidden="true"></i>Belum ada absensi hari ini.</div>
             @else
             <div class="dashboard-chart-layout">
-                <div class="dashboard-chart-donut"><canvas id="absensiChart" role="img" aria-label="Rekap absensi hari ini; rincian jumlah tersedia di samping grafik."></canvas></div>
+
                 <dl class="space-y-3 flex-1 min-w-0">
                     @foreach(['Hadir' => '#527348', 'Izin' => '#C49B53', 'Sakit' => '#648B8B', 'Alpha' => '#C66B5D'] as $status => $color)
                     <div class="flex items-center justify-between gap-3">
@@ -95,25 +96,3 @@
     </section>
 </div>
 @endsection
-
-@push('scripts')
-@if(!$absensi_hari_ini->isEmpty())
-<script>
-new Chart(document.getElementById('absensiChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Hadir', 'Izin', 'Sakit', 'Alpha'],
-        datasets: [{
-            data: {{ Illuminate\Support\Js::from(collect(['Hadir', 'Izin', 'Sakit', 'Alpha'])->map(fn($status) => (int) $absensi_hari_ini->get($status, 0))) }},
-            backgroundColor: ['#527348', '#C49B53', '#648B8B', '#C66B5D'],
-            borderWidth: 3, borderColor: '#ffffff', hoverOffset: 3
-        }]
-    },
-    options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } }, cutout: '73%'
-    }
-});
-</script>
-@endif
-@endpush
